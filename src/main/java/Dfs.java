@@ -327,6 +327,10 @@ public class Dfs {
         }
     }
 
+    private static class DifferentModelsException extends Exception {
+
+    }
+
     public interface ProgressListener {
         void started(Dfs var1);
 

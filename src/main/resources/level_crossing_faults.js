@@ -9,7 +9,7 @@ for (var i = 0; i < n; i++){
             while (true){
                 bp.sync({request: bp.Event("Approaching_" + i)});
                 bp.sync({request: [bp.Event("Entering_" + i), bp.Event("UnObservableEntering_" + i)], block: bp.Event("Raise")});
-                bp.sync({request: bp.Event("Leaving_" + i), block: bp.Event("Raise")});
+                bp.sync({request: bp.Event("Leaving_" + i), block: bp.Event("Raise")});//
             }
         });
     })(i);
@@ -17,17 +17,26 @@ for (var i = 0; i < n; i++){
 
 bp.registerBThread("no_entering_when_barrier_up", function() {
     while (true){
-        bp.sync({waitFor: bp.Event("Lower"), block: Enters});
-        bp.sync({waitFor: bp.Event("Raise")});
+        bp.sync({waitFor: bp.Event("Lower"), block: Enters});//
+        bp.sync({waitFor: [bp.Event("Raise"), bp.Event("PrematureRaise")]});
     }
 });
 
+// bp.registerBThread("no_leaving_when_barrier_up", function() {
+//     while (true){
+//         bp.sync({waitFor: bp.Event("Lower"), block: Leavings});//
+//         bp.sync({waitFor: [bp.Event("Raise"), bp.Event("PrematureRaise")]});
+//     }
+// });
+
+
 bp.registerBThread("Barriers", function() {
     while (true){
-        bp.sync({waitFor: Approachings});
+        bp.sync({waitFor: Approachings});//
         bp.sync({request: bp.Event("Lower")});
         //bp.sync({waitFor: Leavings});
         bp.sync({request: [bp.Event("Raise"), bp.Event("PrematureRaise")]});
     }
 });
+
 

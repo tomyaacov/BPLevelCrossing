@@ -27,7 +27,8 @@ for (var i = 0; i < n; i++){
             while (true){
                 bp.sync({request: [bp.Event("Approaching_" + i),
                         bp.Event("Entering_" + i),
-                        bp.Event("Leaving_" + i)]});
+                        bp.Event("Leaving_" + i),
+                        bp.Event("UnObservableEntering_" + i)]});
             }
         });
     })(i);
@@ -146,7 +147,7 @@ bp.registerBThread("p_6", function() {
                 }
             } else {
                 event = bp.sync({waitFor: bp.Event("OpeningRequest"), block:[bp.Event("Raise"), bp.Event("ClosingRequest")]});
-                    x += 1;
+                x += 1;
             }
         }
     }
@@ -219,6 +220,7 @@ bp.registerBThread("phelper", function() {
                 bp.Event("OpeningRequest"),
                 bp.Event("Lower"),
                 bp.Event("Raise"),
-                bp.Event("KeepDown")]});
+                bp.Event("KeepDown"),
+                bp.Event("PrematureRaise")]});
     }
 });

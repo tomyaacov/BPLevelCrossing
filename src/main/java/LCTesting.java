@@ -1,52 +1,77 @@
 import il.ac.bgu.cs.bp.bpjs.analysis.VerificationResult;
+import il.ac.bgu.cs.bp.bpjs.execution.BProgramRunner;
+import il.ac.bgu.cs.bp.bpjs.execution.listeners.PrintBProgramRunnerListener;
 import il.ac.bgu.cs.bp.bpjs.model.BEvent;
 import il.ac.bgu.cs.bp.bpjs.model.BProgram;
 import il.ac.bgu.cs.bp.bpjs.model.ResourceBProgram;
 import il.ac.bgu.cs.bp.bpjs.model.eventselection.SimpleEventSelectionStrategy;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.List;
 
 public class LCTesting {
     public static void main(final String[] args) throws Exception {
 
-//        SimpleEventSelectionStrategyFilter ess = new SimpleEventSelectionStrategyFilter(new SimpleEventSelectionStrategy(2));
-//        BProgram bProgram = new ResourceBProgram("level_crossing_3_faults.js", ess);
+        ModelComparingESS ess = new ModelComparingESS(1);
+        BProgram bProgram = new ResourceBProgram(Arrays.asList("level_crossing.js", "lc_verification.js", "utils.js"),"joint model", ess);
+
+
+        Dfs vrf = new Dfs();
+        vrf.setDebugMode(false);
+        vrf.setProgressListener(new PrintDfsListener());  // add a listener to print progress
+        VerificationResult res = vrf.verify(bProgram);
+        System.out.println(res.getScannedStatesCount());
+
+        System.out.println(res.isViolationFound());  // true iff a counter example was found
+        if(res.isViolationFound()) {
+            res.getViolation().get().getCounterExampleTrace().getNodes().forEach(n -> System.out.println(n.getEvent()));      // an Optional<Violation>
+        }
+
+        ess = new ModelComparingESS(1);
+        bProgram = new ResourceBProgram(Arrays.asList("level_crossing_faults.js", "lc_verification_faults.js", "utils.js"),"joint model", ess);
+
+
+        vrf = new Dfs();
+        vrf.setDebugMode(false);
+        vrf.setProgressListener(new PrintDfsListener());  // add a listener to print progress
+        res = vrf.verify(bProgram);
+        System.out.println(res.getScannedStatesCount());
+
+        System.out.println(res.isViolationFound());  // true iff a counter example was found
+        if(res.isViolationFound()) {
+            res.getViolation().get().getCounterExampleTrace().getNodes().forEach(n -> System.out.println(n.getEvent()));      // an Optional<Violation>
+        }
+
+
         //BProgram bProgram = new ResourceBProgram("lc_verification.js", ess);
 //        BProgramRunner bProgramRunner = new BProgramRunner(bProgram);
 //        bProgramRunner.addListener(new PrintBProgramRunnerListener());
 //        bProgram.setWaitForExternalEvents(false);
 //        bProgramRunner.run();
-        //level_crossing_3.js
-        //n=1,5 n=2,13 n=3,35 n=4,97 n=5,275
-        //level_crossing_3_faults.js
-        //n=1,13 n=2,37 n=3,109 n=4,325 n=5,973
-        //lc_verification.js
-        //n=1,71 n=2,1373 n=3, n=4, n=5,
-        //        System.out.println(res.getScannedStatesCount());
-//
-//        System.out.println(res.isViolationFound());  // true iff a counter example was found
-//        System.out.println(res.getViolation());      // an Optional<Violation>
-//        //res.getViolation().ifPresent( v -> v.getCounterExampleTrace() );
+
+
+        //res.getViolation().ifPresent( v -> v.getCounterExampleTrace() );
 
 //        SimpleEventSelectionStrategyFilter ess = new SimpleEventSelectionStrategyFilter(new SimpleEventSelectionStrategy(2));
-//        BProgram bProgram = new ResourceBProgram("level_crossing_3_faults.js", ess);
+//        BProgram bProgram = new ResourceBProgram("level_crossing_faults.js", ess);
 //        DfsBProgramVerifier vrf = new DfsBProgramVerifier();
 //        vrf.setDebugMode(true);
 //        vrf.setProgressListener(new PrintDfsVerifierListener());  // add a listener to print progress
 //        VerificationResult res = vrf.verify(bProgram);
 
 
-        SimpleEventSelectionStrategy ess = new SimpleEventSelectionStrategy(2);
-        BProgram bProgram = new ResourceBProgram("level_crossing_3_faults.js", ess);
-        Dfs vrf = new Dfs();
-        vrf.setDebugMode(false);
-        vrf.setProgressListener(new PrintDfsListener());  // add a listener to print progress
-        VerificationResult res = vrf.verify(bProgram);
-        printPossiblePaths(vrf.possiblePaths);
-        ArrayList<ArrayList<BEvent>> possiblePaths = removeSubPath(vrf.possiblePaths);
-        printPossiblePaths(possiblePaths);// this might take a while
+//        SimpleEventSelectionStrategy ess = new SimpleEventSelectionStrategy(2);
+//        BProgram bProgram = new ResourceBProgram("level_crossing_faults.js", ess);
+//        Dfs vrf = new Dfs();
+//        vrf.setDebugMode(false);
+//        vrf.setProgressListener(new PrintDfsListener());  // add a listener to print progress
+//        VerificationResult res = vrf.verify(bProgram);
+//        printPossiblePaths(vrf.possiblePaths);
+//        ArrayList<ArrayList<BEvent>> possiblePaths = removeSubPath(vrf.possiblePaths);
+//        printPossiblePaths(possiblePaths);// this might take a while
 
 //        ess = new SimpleEventSelectionStrategyFilter(new SimpleEventSelectionStrategy(2));
 //        bProgram = new ResourceBProgram("lc_verification.js", ess);

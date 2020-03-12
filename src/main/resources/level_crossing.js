@@ -1,4 +1,4 @@
-const n = 5;
+const n = 2;
 const Enters = bp.EventSet("Enters", function(evt) {return evt.name.startsWith("Entering")});
 const Approachings = bp.EventSet("Approachings", function(evt) {return evt.name.startsWith("Approaching")});
 const Leavings = bp.EventSet("Leavings", function(evt) {return evt.name.startsWith("Leaving")});
@@ -32,28 +32,28 @@ bp.registerBThread("Barriers", function() {
 });
 
 
-//assert bthreads
-bp.registerBThread("no_lower_before_raise", function() {
-    while (true){
-        var evt = bp.sync({waitFor: [bp.Event("Lower"), bp.Event("Raise")]});
-        bp.ASSERT(!evt.name.equals("Raise"), "Raise before Lower!");
-        var evt = bp.sync({waitFor: [bp.Event("Lower"), bp.Event("Raise")]});
-        bp.ASSERT(!evt.name.equals("Lower"), "Lower after Lower!");
-    }
-});
-
-bp.registerBThread("approachings - leavings == 0", function() {
-    var i = 0;
-    while (true){
-        var evt = bp.sync({waitFor: [Approachings, Leavings, bp.Event("Raise")]});
-        if (Approachings.contains(evt)){
-            i++;
-        } else if (Leavings.contains(evt)){
-            i--;
-        } else {
-            bp.ASSERT(i==0, "Raise when approachings - leavings > 0");
-        }
-    }
-});
+// //assert bthreads
+// bp.registerBThread("no_lower_before_raise", function() {
+//     while (true){
+//         var evt = bp.sync({waitFor: [bp.Event("Lower"), bp.Event("Raise")]});
+//         bp.ASSERT(!evt.name.equals("Raise"), "Raise before Lower!");
+//         var evt = bp.sync({waitFor: [bp.Event("Lower"), bp.Event("Raise")]});
+//         bp.ASSERT(!evt.name.equals("Lower"), "Lower after Lower!");
+//     }
+// });
+//
+// bp.registerBThread("approachings - leavings == 0", function() {
+//     var i = 0;
+//     while (true){
+//         var evt = bp.sync({waitFor: [Approachings, Leavings, bp.Event("Raise")]});
+//         if (Approachings.contains(evt)){
+//             i++;
+//         } else if (Leavings.contains(evt)){
+//             i--;
+//         } else {
+//             bp.ASSERT(i==0, "Raise when approachings - leavings > 0");
+//         }
+//     }
+// });
 
 //how can we make sure we all possible options can still happen in the model
