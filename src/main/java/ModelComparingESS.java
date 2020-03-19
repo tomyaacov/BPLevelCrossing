@@ -87,6 +87,10 @@ public class ModelComparingESS extends SimpleEventSelectionStrategy {
         if (!(requestedAndNotBlocked1.containsAll(requestedAndNotBlocked2) && requestedAndNotBlocked2.containsAll(requestedAndNotBlocked1))){
             Set<BEvent> a = new HashSet<BEvent>();
             a.add(new BEvent("Violation"));
+            System.out.println("optional events in petri net model");
+            System.out.println(requestedAndNotBlocked1);
+            System.out.println("optional events in bp model");
+            System.out.println(requestedAndNotBlocked2);
             return a;
         }
 

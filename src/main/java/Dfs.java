@@ -11,38 +11,33 @@ import java.util.*;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
+import static java.util.stream.Collectors.toSet;
 
 public class Dfs {
 
     private static final AtomicInteger INSTANCE_COUNTER = new AtomicInteger();
-    public static final long DEFAULT_MAX_TRACE = 1000L;
-    public static final long DEFAULT_ITERATION_COUNT_GAP = 1000L;
-    private static final Dfs.ProgressListener NULL_PROGRESS_LISTENER = new Dfs.ProgressListener() {
-        public void started(Dfs vfr) {
-        }
+    public final static long DEFAULT_MAX_TRACE = 1000;
+    public final static long DEFAULT_ITERATION_COUNT_GAP = 1000;
+    private static final ProgressListener NULL_PROGRESS_LISTENER = new ProgressListener() {
+        @Override public void started(Dfs vfr) {}
+        @Override public void iterationCount(long count, long statesHit, Dfs vfr) {}
+        @Override public void maxTraceLengthHit(ExecutionTrace aTrace, Dfs vfr) {}
+        @Override public void done(Dfs vfr) {}
 
-        public void iterationCount(long count, long statesHit, Dfs vfr) {
-        }
-
-        public void maxTraceLengthHit(ExecutionTrace aTrace, Dfs vfr) {
-        }
-
-        public void done(Dfs vfr) {
-        }
-
+        @Override
         public boolean violationFound(Violation aViolation, Dfs vfr) {
             return false;
         }
     };
     private long visitedEdgeCount;
     private VisitedStateStore visited = new BThreadSnapshotVisitedStateStore();
-    private long maxTraceLength = 1000L;
-    private final List<Node> currentPath = new ArrayList();
-    private Dfs.ProgressListener listener;
-    private long iterationCountGap = 1000L;
+    private long maxTraceLength = DEFAULT_MAX_TRACE;
+    private final List<Node> currentPath = new ArrayList<>();
+    private ProgressListener listener;
+    private long iterationCountGap = DEFAULT_ITERATION_COUNT_GAP;
     private BProgram currentBProgram;
     private boolean debugMode = false;
-    private final Set<ExecutionTraceInspection> inspections = new HashSet();
+    private final Set<ExecutionTraceInspection> inspections = new HashSet<>();
     private ArrayExecutionTrace trace;
     public ArrayList<ArrayList<BEvent>> possiblePaths = new ArrayList();
 
@@ -50,150 +45,141 @@ public class Dfs {
     }
 
     public VerificationResult verify(BProgram aBp) throws Exception {
-        if (this.listener == null) {
-            this.listener = NULL_PROGRESS_LISTENER;
+        if ( listener == null ) {
+            listener = NULL_PROGRESS_LISTENER;
         }
+        currentBProgram = aBp;
+        visitedEdgeCount = 0;
+        currentPath.clear();
+        visited.clear();
+        trace = new ArrayExecutionTrace(currentBProgram);
 
-        this.currentBProgram = aBp;
-        this.visitedEdgeCount = 0L;
-        this.currentPath.clear();
-        this.visited.clear();
-        this.trace = new ArrayExecutionTrace(this.currentBProgram);
-        if (this.inspections.isEmpty()) {
-            this.inspections.addAll(ExecutionTraceInspections.DEFAULT_SET);
+        // in case no verifications were specified, use the defauls set.
+        if ( inspections.isEmpty() ) {
+            inspections.addAll( ExecutionTraceInspections.DEFAULT_SET );
         }
 
         ExecutorService execSvc = ExecutorServiceMaker.makeWithName("DfsBProgramRunner-" + INSTANCE_COUNTER.incrementAndGet());
         long start = System.currentTimeMillis();
-        this.listener.started(this);
-        Violation vio = this.dfsUsingStack(new Node(this.currentBProgram, this.currentBProgram.setup().start(execSvc), (BEvent)null), execSvc);
+        listener.started(this);
+        Violation vio = dfsUsingStack(new Node(currentBProgram, currentBProgram.setup().start(execSvc), null), execSvc);
         long end = System.currentTimeMillis();
         execSvc.shutdown();
-        this.listener.done(this);
-        return new VerificationResult(vio, end - start, this.visited.getVisitedStateCount(), this.visitedEdgeCount);
+        listener.done(this);
+        return new VerificationResult(vio, end - start, visited.getVisitedStateCount(), visitedEdgeCount);
     }
 
     protected Violation dfsUsingStack(Node aStartNode, ExecutorService execSvc) throws Exception {
-        long iterationCount = 0L;
-        this.push(aStartNode);
-        Violation v = this.inspectCurrentTrace();
-        if (v != null) {
-            return v;
-        } else {
-            while(!this.isPathEmpty()) {
-                ++iterationCount;
-                if (this.debugMode) {
-                    this.printStatus(iterationCount, this.currentPath);
-                }
+        long iterationCount = 0;
 
-                Node curNode = this.peek();
-                if ((long)this.pathLength() == this.maxTraceLength) {
-                    this.listener.maxTraceLengthHit(this.trace, this);
-                    this.pop();
-                } else {
-                    try {
-                        Node nextNode = this.getUnvisitedNextNode(curNode, execSvc);
-                        if (nextNode == null) {
-                            savePath();
-                            if (this.isDebugMode()) {
-                                System.out.println("-pop!-");
-                            }
+        push(aStartNode);
+        Violation v = inspectCurrentTrace();
+        if ( v != null ) return v;
 
-                            Node p = this.pop();
-                            if (p.getEventIterator().hasNext()) {
-                                throw new IllegalStateException("Still having some events to traverse: " + p.getEventIterator().next());
-                            }
-                        } else {
-                            if (this.isDebugMode()) {
-                                System.out.println("-visiting: " + nextNode);
-                            }
+        while (!isPathEmpty()) {
+            iterationCount++;
 
-                            this.push(nextNode);
-                            v = this.inspectCurrentTrace();
-                            if (v != null) {
-                                return v;
-                            }
+            if (debugMode) {
+                printStatus(iterationCount, currentPath);
+            }
+
+            Node curNode = peek();
+
+            if (pathLength() == maxTraceLength) {
+                // fold stack;
+                listener.maxTraceLengthHit(trace, this);
+                pop();
+
+            } else {
+                try {
+                    Node nextNode = getUnvisitedNextNode(curNode, execSvc);
+                    if (nextNode == null) {
+                        // fold stack, retry next iteration;
+                        if (isDebugMode()) {
+                            System.out.println("-pop!-");
                         }
-                    } catch (Dfs.ViolatingPathFoundException var9) {
-                        return var9.v;
-                    }
-                }
+                        Node p = pop();
+                        if ( p.getEventIterator().hasNext() ) {
+                            throw new IllegalStateException("Still having some events to traverse: " + p.getEventIterator().next() );
+                        }
 
-                if (iterationCount % this.iterationCountGap == 0L) {
-                    this.listener.iterationCount(iterationCount, this.visited.getVisitedStateCount(), this);
+                    } else {
+                        // go deeper
+                        if (isDebugMode()) {
+                            System.out.println("-visiting: " + nextNode);
+                        }
+                        push(nextNode);
+                        v = inspectCurrentTrace();
+                        if ( v != null ) return v;
+                    }
+                } catch (ViolatingPathFoundException vcfe ) {
+                    return vcfe.v;
                 }
             }
 
-            return null;
+            if ( iterationCount % iterationCountGap == 0 ) {
+                listener.iterationCount(iterationCount, visited.getVisitedStateCount(), this);
+            }
         }
+
+        return null;
     }
 
-    protected Node getUnvisitedNextNode(Node src, ExecutorService execSvc) throws Dfs.ViolatingPathFoundException {
-        while(src.getEventIterator().hasNext()) {
-            BEvent nextEvent = (BEvent)src.getEventIterator().next();
-
+    protected Node getUnvisitedNextNode(Node src, ExecutorService execSvc)
+            throws ViolatingPathFoundException{
+        while (src.getEventIterator().hasNext()) {
+            final BEvent nextEvent = src.getEventIterator().next();
             try {
                 Node possibleNextNode = src.getNextNode(nextEvent, execSvc);
-                ++this.visitedEdgeCount;
+                visitedEdgeCount++;
+
                 BProgramSyncSnapshot pns = possibleNextNode.getSystemState();
-                if (!this.visited.isVisited(pns)) {
+                if (visited.isVisited(pns) ) {
+                    boolean cycleFound = false;
+                    for ( int idx=0; idx<currentPath.size() && !cycleFound; idx++) {
+                        // Was this a cycle?
+                        Node nd = currentPath.get(idx);
+                        if ( pns.equals(nd.getSystemState()) ) {
+                            // found an actual cycle
+                            cycleFound = true;
+                            trace.cycleTo(nextEvent, idx);
+                            Set<Violation> res = inspections.stream().map(i->i.inspectTrace(trace))
+                                    .filter(o->o.isPresent()).map(Optional::get).collect(toSet());
+
+                            for ( Violation v : res ) {
+                                if ( ! listener.violationFound(v, this)) {
+                                    throw new ViolatingPathFoundException(v);
+                                }
+                            }
+                        }
+                    }
+                    if ( ! cycleFound ) {
+                        // revisiting a state from a different path. Quickly inspect the path and contnue.
+                        trace.advance(nextEvent, pns);
+                        Set<Violation> res = inspections.stream().map(i->i.inspectTrace(trace))
+                                .filter(o->o.isPresent()).map(Optional::get).collect(toSet());
+                        if ( res.size() > 0  ) {
+                            for ( Violation v : res ) {
+                                if ( ! listener.violationFound(v, this) ) {
+                                    throw new ViolatingPathFoundException(v);
+                                }
+                            }
+                        }
+                        trace.pop();
+                    }
+                } else {
+                    // advance to this newly discovered node
                     return possibleNextNode;
                 }
-
-                boolean cycleFound = false;
-
-                for(int idx = 0; idx < this.currentPath.size() && !cycleFound; ++idx) {
-                    Node nd = (Node)this.currentPath.get(idx);
-                    if (pns.equals(nd.getSystemState())) {
-                        cycleFound = true;
-                        this.trace.cycleTo(nextEvent, idx);
-                        Set<Violation> res = (Set)this.inspections.stream().map((i) -> {
-                            return i.inspectTrace(this.trace);
-                        }).filter((o) -> {
-                            return o.isPresent();
-                        }).map(Optional::get).collect(Collectors.toSet());
-                        Iterator var10 = res.iterator();
-
-                        while(var10.hasNext()) {
-                            Violation v = (Violation)var10.next();
-                            if (!this.listener.violationFound(v, this)) {
-                                throw new Dfs.ViolatingPathFoundException(v);
-                            }
-                        }
-                    }
+            } catch ( BPjsRuntimeException bprte ) {
+                trace.advance(nextEvent, null);
+                Violation jsev = new JsErrorViolation(trace, bprte);
+                if ( ! listener.violationFound(jsev, this) ) {
+                    throw new ViolatingPathFoundException(jsev);
                 }
-
-                if (!cycleFound) {
-                    this.trace.advance(nextEvent, pns);
-                    Set<Violation> res = (Set)this.inspections.stream().map((i) -> {
-                        return i.inspectTrace(this.trace);
-                    }).filter((o) -> {
-                        return o.isPresent();
-                    }).map(Optional::get).collect(Collectors.toSet());
-                    if (res.size() > 0) {
-                        Iterator var15 = res.iterator();
-
-                        while(var15.hasNext()) {
-                            Violation v = (Violation)var15.next();
-                            if (!this.listener.violationFound(v, this)) {
-                                throw new Dfs.ViolatingPathFoundException(v);
-                            }
-                        }
-                    }
-
-                    this.trace.pop();
-                }
-            } catch (BPjsRuntimeException var12) {
-                this.trace.advance(nextEvent, (BProgramSyncSnapshot)null);
-                Violation jsev = new JsErrorViolation(this.trace, var12);
-                if (!this.listener.violationFound(jsev, this)) {
-                    throw new Dfs.ViolatingPathFoundException(jsev);
-                }
-
-                this.trace.pop();
+                trace.pop();
             }
         }
-
         return null;
     }
 
@@ -202,19 +188,19 @@ public class Dfs {
     }
 
     public long getMaxTraceLength() {
-        return this.maxTraceLength;
+        return maxTraceLength;
     }
 
     public void setVisitedStateStore(VisitedStateStore aVisitedStateStore) {
-        this.visited = aVisitedStateStore;
+        visited = aVisitedStateStore;
     }
 
     public VisitedStateStore getVisitedStateStore() {
-        return this.visited;
+        return visited;
     }
 
-    public void setProgressListener(Dfs.ProgressListener pl) {
-        this.listener = pl != null ? pl : NULL_PROGRESS_LISTENER;
+    public void setProgressListener(ProgressListener pl) {
+        listener = (pl != null) ? pl : NULL_PROGRESS_LISTENER;
     }
 
     public void setIterationCountGap(long iterationCountGap) {
@@ -222,94 +208,84 @@ public class Dfs {
     }
 
     public long getIterationCountGap() {
-        return this.iterationCountGap;
+        return iterationCountGap;
     }
 
     public BProgram getCurrentBProgram() {
-        return this.currentBProgram;
+        return currentBProgram;
     }
 
     void printStatus(long iteration, List<Node> path) {
         System.out.println("Iteration " + iteration);
-        System.out.println("  visited: " + this.visited.getVisitedStateCount());
-        path.forEach((n) -> {
-            System.out.println("  " + n.getLastEvent());
-        });
+        System.out.println("  visited: " + visited.getVisitedStateCount());
+        path.forEach(n -> System.out.println("  " + n.getLastEvent()));
     }
 
     private Violation inspectCurrentTrace() {
-        Set<Violation> res = (Set)this.inspections.stream().map((vx) -> {
-            return vx.inspectTrace(this.trace);
-        }).filter((o) -> {
-            return o.isPresent();
-        }).map(Optional::get).collect(Collectors.toSet());
-        if (res.size() > 0) {
-            Iterator var2 = res.iterator();
-
-            while(var2.hasNext()) {
-                Violation v = (Violation)var2.next();
-                if (!this.listener.violationFound(v, this)) {
+        Set<Violation> res = inspections.stream()
+                .map(v->v.inspectTrace(trace))
+                .filter(o->o.isPresent()).map(Optional::get)
+                .collect(toSet());
+        if ( res.size() > 0  ) {
+            for ( Violation v : res ) {
+                if ( ! listener.violationFound(v, this) ) {
                     return v;
                 }
             }
-
-            if (this.isDebugMode()) {
+            if (isDebugMode()) {
                 System.out.println("-pop! (violation)-");
             }
-
-            this.pop();
+            pop();
         }
-
         return null;
     }
 
     private void push(Node n) {
-        this.visited.store(n.getSystemState());
-        this.currentPath.add(n);
-        if (this.trace.getStateCount() == 0) {
-            this.trace.push(n.getSystemState());
+        visited.store(n.getSystemState());
+        currentPath.add(n);
+        if ( trace.getStateCount() == 0 ) {
+            trace.push( n.getSystemState() );
         } else {
-            this.trace.advance(n.getLastEvent(), n.getSystemState());
+            trace.advance(n.getLastEvent(), n.getSystemState());
         }
-
     }
 
     private Node pop() {
-        Node popped = (Node)this.currentPath.remove(this.currentPath.size() - 1);
-        this.trace.pop();
+        Node popped = currentPath.remove(currentPath.size() - 1);
+        trace.pop();
         return popped;
     }
 
     private int pathLength() {
-        return this.currentPath.size();
+        return currentPath.size();
     }
 
     private boolean isPathEmpty() {
-        return this.pathLength() == 0;
+        return pathLength() == 0;
     }
 
     private Node peek() {
-        return this.isPathEmpty() ? null : (Node)this.currentPath.get(this.currentPath.size() - 1);
+        return isPathEmpty() ? null : currentPath.get(currentPath.size() - 1);
     }
 
     public boolean isDebugMode() {
-        return this.debugMode;
+        return debugMode;
     }
 
     public void setDebugMode(boolean debugMode) {
         this.debugMode = debugMode;
     }
 
-    public void addInspection(ExecutionTraceInspection ins) {
-        this.inspections.add(ins);
+    public void addInspection( ExecutionTraceInspection ins ) {
+        inspections.add(ins);
     }
 
     public Set<ExecutionTraceInspection> getInspections() {
-        return this.inspections;
+        return inspections;
     }
 
-    public boolean removeInspection(ExecutionTraceInspection ins) {
-        return this.inspections.remove(ins);
+    public boolean removeInspection( ExecutionTraceInspection ins ) {
+        return inspections.remove(ins);
     }
 
     public void savePath(){
@@ -327,20 +303,18 @@ public class Dfs {
         }
     }
 
-    private static class DifferentModelsException extends Exception {
 
-    }
+    public static interface ProgressListener {
 
-    public interface ProgressListener {
-        void started(Dfs var1);
+        void started(Dfs vfr);
 
-        void iterationCount(long var1, long var3, Dfs var5);
+        void iterationCount(long count, long statesHit, Dfs vfr);
 
-        void maxTraceLengthHit(ExecutionTrace var1, Dfs var2);
+        void maxTraceLengthHit(ExecutionTrace aTrace, Dfs vfr);
 
-        boolean violationFound(Violation var1, Dfs var2);
+        boolean violationFound( Violation aViolation, Dfs vfr );
 
-        void done(Dfs var1);
+        void done(Dfs vfr);
     }
 
 }

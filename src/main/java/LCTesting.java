@@ -43,6 +43,7 @@ public class LCTesting {
         System.out.println(res.isViolationFound());  // true iff a counter example was found
         if(res.isViolationFound()) {
             res.getViolation().get().getCounterExampleTrace().getNodes().forEach(n -> System.out.println(n.getEvent()));      // an Optional<Violation>
+            //System.out.println(res.printBids());
         }
 
 
