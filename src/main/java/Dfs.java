@@ -94,6 +94,7 @@ public class Dfs {
                 try {
                     Node nextNode = getUnvisitedNextNode(curNode, execSvc);
                     if (nextNode == null) {
+                        this.savePath();
                         // fold stack, retry next iteration;
                         if (isDebugMode()) {
                             System.out.println("-pop!-");

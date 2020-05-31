@@ -1,4 +1,4 @@
-const n = 2;
+const n = 1;
 const Enters = bp.EventSet("Enters", function(evt) {return evt.name.startsWith("Entering")});
 const Approachings = bp.EventSet("Approachings", function(evt) {return evt.name.startsWith("Approaching")});
 const Leavings = bp.EventSet("Leavings", function(evt) {return evt.name.startsWith("Leaving")});
