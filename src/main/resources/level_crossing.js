@@ -8,52 +8,104 @@ for (var i = 0; i < n; i++){
         bp.registerBThread("RailwayTraffic_" + i, function() {
             while (true){
                 bp.sync({request: bp.Event("Approaching_" + i)});
-                bp.sync({request: bp.Event("Entering_" + i), block: bp.Event("Raise")});
-                bp.sync({request: bp.Event("Leaving_" + i), block: bp.Event("Raise")});
+                bp.sync({request: bp.Event("Entering_" + i)});
+                bp.sync({request: bp.Event("Leaving_" + i)});
             }
         });
+
+        bp.registerBThread("no entering when barrier not Lower" + i, function() {
+            while (true){
+                bp.sync({waitFor: bp.Event("Lower"), block: bp.Event("Entering_" + i)});
+                bp.sync({waitFor: bp.Event("Raise")});
+            }
+        });
+
+        bp.registerBThread("ClosingRequest" + i, function() {
+            while (true){
+                bp.sync({waitFor: bp.Event("Approaching_" + i)});
+                bp.sync({request: bp.Event("Lower"), waitFor: bp.Event("Entering_" + i)});
+            }
+        });
+
+        bp.registerBThread("BlockUpWhileIn_" + i, function() {
+            while (true){
+                bp.sync({waitFor: bp.Event("Entering_" + i)});
+                bp.sync({block: bp.Event("Raise"), waitFor: bp.Event("Leaving_" + i)});
+            }
+        });
+
+
     })(i);
 }
 
-bp.registerBThread("no_entering_when_barrier_up", function() {
-    while (true){
-        bp.sync({waitFor: bp.Event("Lower"), block: Enters});
-        bp.sync({waitFor: bp.Event("Raise")});
-    }
-});
-
 bp.registerBThread("Barriers", function() {
     while (true){
-        bp.sync({waitFor: Approachings});
-        bp.sync({request: bp.Event("Lower")});
-        //bp.sync({waitFor: Leavings});
-        bp.sync({request: bp.Event("Raise")});
+        bp.sync({waitFor: bp.Event("Lower")});
+        bp.sync({request: bp.Event("Raise"), block:bp.Event("Lower")});//
     }
 });
 
+/*
+After lower, raising is possible only if had leaving,
+approaching, but no closing request.
+meaning, that our barrier behavior depends on helper events
+*/
 
-// //assert bthreads
-// bp.registerBThread("no_lower_before_raise", function() {
+
+
+
+
+
+
+
+
+
+
+
+
+
+// bp.registerBThread("no_entering_when_barrier_up", function() {
 //     while (true){
-//         var evt = bp.sync({waitFor: [bp.Event("Lower"), bp.Event("Raise")]});
-//         bp.ASSERT(!evt.name.equals("Raise"), "Raise before Lower!");
-//         var evt = bp.sync({waitFor: [bp.Event("Lower"), bp.Event("Raise")]});
-//         bp.ASSERT(!evt.name.equals("Lower"), "Lower after Lower!");
+//         bp.sync({waitFor: bp.Event("Lower"), block: Enters});
+//         bp.sync({waitFor: bp.Event("Raise")});//
+//     }
+// });
+
+
+// for (var i = 0; i < n; i++){
+//     (function(i){
+//         bp.registerBThread("RailwayTraffic_" + i, function() {
+//             while (true){
+//                 bp.sync({request: bp.Event("Approaching_" + i)});
+//                 bp.sync({request: bp.Event("Entering_" + i)});
+//                 bp.sync({request: bp.Event("Leaving_" + i)});
+//             }
+//         });
+//         bp.registerBThread("Controller_" + i, function() {
+//             while (true){
+//                 bp.sync({waitFor: bp.Event("Approaching_" + i)});
+//                 bp.sync({request: bp.Event("ClosingRequest")});
+//                 bp.sync({request: bp.Event("OpeningRequest"), block: bp.Event("Raise")});
+//             }
+//         });
+//     })(i);
+// }
+//
+// bp.registerBThread("Barriers", function() {
+//     while (true){
+//         bp.sync({waitFor: bp.Event("ClosingRequest")});
+//         bp.sync({request: bp.Event("Lower")});
+//         bp.sync({request: bp.Event("Raise")});
 //     }
 // });
 //
-// bp.registerBThread("approachings - leavings == 0", function() {
-//     var i = 0;
+// bp.registerBThread("KeepLower", function() {
 //     while (true){
-//         var evt = bp.sync({waitFor: [Approachings, Leavings, bp.Event("Raise")]});
-//         if (Approachings.contains(evt)){
-//             i++;
-//         } else if (Leavings.contains(evt)){
-//             i--;
-//         } else {
-//             bp.ASSERT(i==0, "Raise when approachings - leavings > 0");
+//         bp.sync({waitFor: bp.Event("Lower")});
+//         while (true){
+//             bp.sync({waitFor: bp.Event("ClosingRequest")});
+//             var e = bp.sync({request: bp.Event("KeepLower"), waitFor: bp.Event("Raise")});
+//             if(e.name.equals("Raise")){break}
 //         }
 //     }
 // });
-
-//how can we make sure we all possible options can still happen in the model

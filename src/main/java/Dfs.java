@@ -16,8 +16,8 @@ import static java.util.stream.Collectors.toSet;
 public class Dfs {
 
     private static final AtomicInteger INSTANCE_COUNTER = new AtomicInteger();
-    public final static long DEFAULT_MAX_TRACE = 1000;
-    public final static long DEFAULT_ITERATION_COUNT_GAP = 1000;
+    public final static long DEFAULT_MAX_TRACE = 10000;
+    public final static long DEFAULT_ITERATION_COUNT_GAP = 10000;
     private static final ProgressListener NULL_PROGRESS_LISTENER = new ProgressListener() {
         @Override public void started(Dfs vfr) {}
         @Override public void iterationCount(long count, long statesHit, Dfs vfr) {}

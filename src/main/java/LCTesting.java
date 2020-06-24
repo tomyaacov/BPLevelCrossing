@@ -6,32 +6,20 @@ import il.ac.bgu.cs.bp.bpjs.model.BProgram;
 import il.ac.bgu.cs.bp.bpjs.model.ResourceBProgram;
 import il.ac.bgu.cs.bp.bpjs.model.eventselection.SimpleEventSelectionStrategy;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.List;
 
 public class LCTesting {
     public static void main(final String[] args) throws Exception {
 
-//        ModelComparingESS ess = new ModelComparingESS(1);
-//        BProgram bProgram = new ResourceBProgram(Arrays.asList("level_crossing.js", "lc_verification.js", "utils.js"),"joint model", ess);
-//
-//
-//        Dfs vrf = new Dfs();
-//        vrf.setDebugMode(false);
-//        vrf.setProgressListener(new PrintDfsListener());  // add a listener to print progress
-//        VerificationResult res = vrf.verify(bProgram);
-//        System.out.println(res.getScannedStatesCount());
-//
-//        System.out.println(res.isViolationFound());  // true iff a counter example was found
-//        if(res.isViolationFound()) {
-//            res.getViolation().get().getCounterExampleTrace().getNodes().forEach(n -> System.out.println(n.getEvent()));      // an Optional<Violation>
-//        }
+
+
+
+
 //
 //        ess = new ModelComparingESS(4);
-//        bProgram = new ResourceBProgram(Arrays.asList("test.js", "lc_verification_faults.js", "utils.js"),"joint model", ess);
+//        bProgram = new ResourceBProgram(Arrays.asList("test.js", "lc_pn_faults.js", "utils.js"),"joint model", ess);
 //
 //
 //        vrf = new Dfs();
@@ -47,7 +35,7 @@ public class LCTesting {
 //        }
 //
 //        SimpleEventSelectionStrategy ess = new SimpleEventSelectionStrategy(1);
-//        BProgram bProgram = new ResourceBProgram("level_crossing_faults.js", ess);
+//        BProgram bProgram = new ResourceBProgram("level_crossing_faults_1.js", ess);
 //        BProgramRunner bProgramRunner = new BProgramRunner(bProgram);
 //        bProgramRunner.addListener(new PrintBProgramRunnerListener());
 //        bProgram.setWaitForExternalEvents(false);
@@ -56,24 +44,24 @@ public class LCTesting {
 
         //res.getViolation().ifPresent( v -> v.getCounterExampleTrace() );
 
-//        SimpleEventSelectionStrategy ess = new SimpleEventSelectionStrategy(1);
-//        BProgram bProgram = new ResourceBProgram("level_crossing_faults.js", ess);
-//        Dfs vrf = new Dfs();
+        SimpleEventSelectionStrategy ess = new SimpleEventSelectionStrategy(1);
+        BProgram bProgram = new ResourceBProgram("level_crossing_assistant.js", ess);
+        Dfs vrf = new Dfs();
 //        vrf.setDebugMode(true);
-//        vrf.setProgressListener(new PrintDfsListener());  // add a listener to print progress
-//        VerificationResult res = vrf.verify(bProgram);
-//        System.out.println(res.getScannedStatesCount());
+        vrf.setProgressListener(new PrintDfsListener());  // add a listener to print progress
+        VerificationResult res = vrf.verify(bProgram);
+        System.out.println(res.getScannedStatesCount());
 
-        //level_crossing_faults.js
+        //level_crossing_faults_1.js
         //n=1,12 n=2,90 n=3,648 n=4,? n=5,?
 
 
-        SimpleEventSelectionStrategy ess = new SimpleEventSelectionStrategy(4);
-        BProgram bProgram = new ResourceBProgram("level_crossing_faults.js", ess);
-        BProgramRunner bProgramRunner = new BProgramRunner(bProgram);
-        bProgramRunner.addListener(new PrintBProgramRunnerListener());
-        bProgram.setWaitForExternalEvents(false);
-        bProgramRunner.run();
+//        SimpleEventSelectionStrategy ess = new SimpleEventSelectionStrategy(4);
+//        BProgram bProgram = new ResourceBProgram("level_crossing_faults_1.js", ess);
+//        BProgramRunner bProgramRunner = new BProgramRunner(bProgram);
+//        bProgramRunner.addListener(new PrintBProgramRunnerListener());
+//        bProgram.setWaitForExternalEvents(false);
+//        bProgramRunner.run();
 //        Dfs vrf = new Dfs();
 //        vrf.setDebugMode(false);
 //        vrf.setProgressListener(new PrintDfsListener());  // add a listener to print progress
@@ -83,7 +71,7 @@ public class LCTesting {
 //        printPossiblePaths(possiblePaths);// this might take a while
 
 //        ess = new SimpleEventSelectionStrategyFilter(new SimpleEventSelectionStrategy(2));
-//        bProgram = new ResourceBProgram("lc_verification.js", ess);
+//        bProgram = new ResourceBProgram("lc_pn.js", ess);
 //        vrf = new Dfs();
 //        vrf.setDebugMode(false);
 //        vrf.setProgressListener(new PrintDfsListener());  // add a listener to print progress

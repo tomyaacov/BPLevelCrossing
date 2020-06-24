@@ -62,17 +62,13 @@ public class ModelComparingESS extends SimpleEventSelectionStrategy {
                 .flatMap( stmt -> stmt.getRequest().stream() )
                 .collect( toSet() );
 
-        List<String> helperEvents = Arrays.asList("ClosingRequest", "OpeningRequest", "KeepDown");
+        List<String> helperEvents = Arrays.asList("OpeningRequest", "KeepDown");
 
         Context.enter();
         Set<BEvent> helperRequestedAndNotBlocked1 = requested1.stream()
                 .filter( req -> !blocked1.contains(req) )
                 .filter(req -> (helperEvents.contains(req.name)))
                 .collect( toSet() );
-
-        if(helperRequestedAndNotBlocked1.size() > 0){
-            return helperRequestedAndNotBlocked1;
-        }
 
         Context.enter();
         Set<BEvent> requestedAndNotBlocked1 = requested1.stream()
@@ -84,15 +80,34 @@ public class ModelComparingESS extends SimpleEventSelectionStrategy {
                 .filter( req -> !blocked2.contains(req) )
                 .collect( toSet() );
 
-        if (!(requestedAndNotBlocked1.containsAll(requestedAndNotBlocked2) && requestedAndNotBlocked2.containsAll(requestedAndNotBlocked1))){
-            Set<BEvent> a = new HashSet<BEvent>();
-            a.add(new BEvent("Violation"));
-            System.out.println("optional events in petri net model");
-            System.out.println(requestedAndNotBlocked1);
-            System.out.println("optional events in bp model");
-            System.out.println(requestedAndNotBlocked2);
-            return a;
+        if(helperRequestedAndNotBlocked1.size() > 0){
+            Context.enter();
+            Set<BEvent> check = requestedAndNotBlocked1.stream()
+                    .filter(req -> !(helperEvents.contains(req.name)))
+                    .collect( toSet() );
+
+            if (!(requestedAndNotBlocked2.containsAll(check))){
+                Set<BEvent> a = new HashSet<BEvent>();
+                a.add(new BEvent("Violation"));
+                System.out.println("optional events in petri net model");
+                System.out.println(requestedAndNotBlocked1);
+                System.out.println("optional events in bp model");
+                System.out.println(requestedAndNotBlocked2);
+                return a;
+            }
+        } else {
+            if (!(requestedAndNotBlocked1.containsAll(requestedAndNotBlocked2) && requestedAndNotBlocked2.containsAll(requestedAndNotBlocked1))){
+                Set<BEvent> a = new HashSet<BEvent>();
+                a.add(new BEvent("Violation"));
+                System.out.println("optional events in petri net model");
+                System.out.println(requestedAndNotBlocked1);
+                System.out.println("optional events in bp model");
+                System.out.println(requestedAndNotBlocked2);
+                return a;
+            }
         }
+
+
 
 
         EventSet blocked = ComposableEventSet.anyOf(statements.stream()
