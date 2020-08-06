@@ -9,6 +9,7 @@ import il.ac.bgu.cs.bp.bpjs.model.BProgram;
 import il.ac.bgu.cs.bp.bpjs.model.BProgramSyncSnapshot;
 import il.ac.bgu.cs.bp.bpjs.model.BThreadSyncSnapshot;
 
+import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintStream;
@@ -27,6 +28,7 @@ public class StateMappingListener implements ExecutionTraceInspection, DfsBProgr
     public List<String> statesList = new ArrayList<>();
     public List<Map<String, String>> stateEventsList = new ArrayList<>();
     public String initialState = null;
+    public String toCsv = "";
 
 
 
@@ -48,7 +50,7 @@ public class StateMappingListener implements ExecutionTraceInspection, DfsBProgr
     public Optional<Violation> inspectTrace(ExecutionTrace et) {
         count++;
         Optional<Violation> inspection = ExecutionTraceInspections.FAILED_ASSERTIONS.inspectTrace(et);
-        printTrace(et);
+        //printTrace(et);
 //        if ( et.getStateCount() == 1 ) {
 //            if ( ! visitedHashes.isEmpty() ) {
 //                System.err.println("** Visiting a trace of size 1 twice.");
@@ -72,16 +74,19 @@ public class StateMappingListener implements ExecutionTraceInspection, DfsBProgr
             out.println( bpssNodeId(et.getLastState()) + " -> "
                     + bpssNodeId(et.getFinalCycle().get(0).getState())
                     + "[label=\"" + eventToStr(et.getLastEvent()) + "\"] // cycle");
-        } else {
-            out.println(newNode(et.getLastState(), !inspection.isPresent()));
-            if ( et.getStateCount() > 1 ) {
-                out.println( bpssNodeId(et.getNodes().get(et.getStateCount()-2).getState()) + " -> "
-                        + bpssNodeId(et.getLastState())
-                        + "[label=\"" + eventToStr(et.getLastEvent()) + "\"] // new");
-            } else {
-                out.println( "start -> " + bpssNodeId(et.getLastState()) + " [color=blue]");
-            }
+
+            printTrace(et);
         }
+//        else {
+//            out.println(newNode(et.getLastState(), !inspection.isPresent()));
+//            if ( et.getStateCount() > 1 ) {
+//                out.println( bpssNodeId(et.getNodes().get(et.getStateCount()-2).getState()) + " -> "
+//                        + bpssNodeId(et.getLastState())
+//                        + "[label=\"" + eventToStr(et.getLastEvent()) + "\"] // new");
+//            } else {
+//                out.println( "start -> " + bpssNodeId(et.getLastState()) + " [color=blue]");
+//            }
+//        }
 
         // We prune on failed assertions.
         return inspection;
@@ -110,6 +115,16 @@ public class StateMappingListener implements ExecutionTraceInspection, DfsBProgr
     @Override
     public void done(DfsBProgramVerifier dbpv) {
         out.println("}");
+        try {
+            BufferedWriter writer = new BufferedWriter(new FileWriter("/tmp/paths.csv"));
+            writer.write(toCsv);
+
+            writer.close();
+        } catch (IOException e){
+
+        }
+
+        out.println(toCsv);
     }
 
     private static final String INVALID_NODE_STYLE = " color=red fontcolor=red shape=hexagon ";
@@ -145,7 +160,10 @@ public class StateMappingListener implements ExecutionTraceInspection, DfsBProgr
         System.err.println("Trace");
         et.getNodes().forEach( nd->{
             System.err.println( nd.getEvent().map( e->e.getName()).orElse("-") );
+            toCsv += nd.getEvent().map( e->e.getName()).orElse("-");
+            toCsv += ",";
         });
+        toCsv += "\n";
         System.err.println("/Trace");
         List<ExecutionTrace.Entry> nodes = et.getNodes();
         String lastState = null;

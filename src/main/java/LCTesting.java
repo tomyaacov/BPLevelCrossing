@@ -45,7 +45,7 @@ public class LCTesting {
         //res.getViolation().ifPresent( v -> v.getCounterExampleTrace() );
 
         SimpleEventSelectionStrategy ess = new SimpleEventSelectionStrategy(1);
-        BProgram bProgram = new ResourceBProgram("level_crossing_assistant.js", ess);
+        BProgram bProgram = new ResourceBProgram("lc_pn_check_before.js", ess);
         Dfs vrf = new Dfs();
 //        vrf.setDebugMode(true);
         vrf.setProgressListener(new PrintDfsListener());  // add a listener to print progress

@@ -7,7 +7,7 @@ import il.ac.bgu.cs.bp.bpjs.model.eventselection.SimpleEventSelectionStrategy;
 public class BPRunner {
     public static void main(final String[] args) throws Exception {
         SimpleEventSelectionStrategy ess = new SimpleEventSelectionStrategy(4);
-        BProgram bProgram = new ResourceBProgram("level_crossing.js", ess);
+        BProgram bProgram = new ResourceBProgram("lc_pn_check_before.js", ess);
         BProgramRunner bProgramRunner = new BProgramRunner(bProgram);
         bProgramRunner.addListener(new PrintBProgramRunnerListener());
         bProgram.setWaitForExternalEvents(false);

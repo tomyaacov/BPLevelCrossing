@@ -1,8 +1,8 @@
-// const n = 1;
-// const Enters = bp.EventSet("Enters", function(evt) {return evt.name.startsWith("Entering")});
-// const Approachings = bp.EventSet("Approachings", function(evt) {return evt.name.startsWith("Approaching")});
-// const Leavings = bp.EventSet("Leavings", function(evt) {return evt.name.startsWith("Leaving")});
-//const ClosingRequests = bp.EventSet("ClosingRequests", function(evt) {return evt.name.startsWith("ClosingRequest_0")});
+const n = 1;
+const Enters = bp.EventSet("Enters", function(evt) {return evt.name.startsWith("Entering")});
+const Approachings = bp.EventSet("Approachings", function(evt) {return evt.name.startsWith("Approaching")});
+const Leavings = bp.EventSet("Leavings", function(evt) {return evt.name.startsWith("Leaving")});
+const ClosingRequests = bp.EventSet("ClosingRequests", function(evt) {return evt.name.startsWith("ClosingRequest_0")});
 
 for (var i = 0; i < n; i++){
     (function(i){
@@ -14,13 +14,13 @@ for (var i = 0; i < n; i++){
         });
         bp.registerBThread("p_" + i + "_2", function() {
             while (true){
-                bp.sync({waitFor: bp.Event("Approaching_" + i), block:[bp.Event("Entering_" + i), bp.Event("UnObservableEntering_" + i)]});
-                bp.sync({waitFor: [bp.Event("Entering_" + i), bp.Event("UnObservableEntering_" + i)]});
+                bp.sync({waitFor: bp.Event("Approaching_" + i), block:bp.Event("Entering_" + i)});
+                bp.sync({waitFor: bp.Event("Entering_" + i)});
             }
         });
         bp.registerBThread("p_" + i + "_3", function() {
             while (true){
-                bp.sync({waitFor: [bp.Event("Entering_" + i), bp.Event("UnObservableEntering_" + i)], block:bp.Event("Leaving_" + i)});
+                bp.sync({waitFor: bp.Event("Entering_" + i), block:bp.Event("Leaving_" + i)});
                 bp.sync({waitFor: bp.Event("Leaving_" + i)});
             }
         });
@@ -35,15 +35,15 @@ for (var i = 0; i < n; i++){
 }
 
 bp.registerBThread("p_1", function() {
-    var p_1_x = 0;
-    var event;
+    let p_1_x = 0;
+    let event;
     while (true){
         if(p_1_x < 1){
             bp.sync({waitFor: Approachings, block:bp.Event("ClosingRequest_0")});
             p_1_x += 1;
         } else {
-            event = bp.sync({waitFor: [bp.Event("ClosingRequest_0"), Approachings]});
-            if (event.name.equals("ClosingRequest_0")){
+            event = bp.sync({waitFor: [bp.Event("ClosingRequest_0"), Approachings]}).name;
+            if (event.equals("ClosingRequest_0")){
                 p_1_x -= 1;
             } else {
                 p_1_x += 1;
@@ -53,15 +53,15 @@ bp.registerBThread("p_1", function() {
 });
 
 bp.registerBThread("p_2", function() {
-    var p_2_x = n;
-    var event;
+    let p_2_x = n;
+    let event;
     while (true){
         if(p_2_x < 1){
             bp.sync({waitFor: bp.Event("OpeningRequest"), block:bp.Event("ClosingRequest_0")});
             p_2_x += 1;
         } else {
-            event = bp.sync({waitFor: [bp.Event("ClosingRequest_0"), bp.Event("OpeningRequest")]});
-            if (event.name.equals("ClosingRequest_0")){
+            event = bp.sync({waitFor: [bp.Event("ClosingRequest_0"), bp.Event("OpeningRequest")]}).name;
+            if (event.equals("ClosingRequest_0")){
                 p_2_x -= 1;
             } else {
                 p_2_x += 1;
@@ -71,15 +71,15 @@ bp.registerBThread("p_2", function() {
 });
 
 bp.registerBThread("p_3", function() {
-    var p_3_x = 0;
-    var event;
+    let p_3_x = 0;
+    let event;
     while (true){
         if(p_3_x < 1){
-            bp.sync({waitFor: bp.Event("ClosingRequest_0"), block:bp.Event("OpeningRequest")});
+            bp.sync({waitFor: bp.Event("ClosingRequest_0"), block:bp.Event("OpeningRequest")}).name;
             p_3_x += 1;
         } else {
             event = bp.sync({waitFor: [bp.Event("ClosingRequest_0"), bp.Event("OpeningRequest")]});
-            if (event.name.equals("OpeningRequest")){
+            if (event.equals("OpeningRequest")){
                 p_3_x -= 1;
             } else {
                 p_3_x += 1;
@@ -89,15 +89,15 @@ bp.registerBThread("p_3", function() {
 });
 
 bp.registerBThread("p_4", function() {
-    var p_4_x = 0;
-    var event;
+    let p_4_x = 0;
+    let event;
     while (true){
         if(p_4_x < 1){
             bp.sync({waitFor: Leavings, block:bp.Event("OpeningRequest")});
             p_4_x += 1;
         } else {
-            event = bp.sync({waitFor: [bp.Event("OpeningRequest"), Leavings]});
-            if (event.name.equals("OpeningRequest")){
+            event = bp.sync({waitFor: [bp.Event("OpeningRequest"), Leavings]}).name;
+            if (event.equals("OpeningRequest")){
                 p_4_x -= 1;
             } else {
                 p_4_x += 1;
@@ -107,15 +107,15 @@ bp.registerBThread("p_4", function() {
 });
 
 bp.registerBThread("p_5", function() {
-    var p_5_x = 0;
-    var event;
+    let p_5_x = 0;
+    let event;
     while (true){
         if(p_5_x < 1){
             bp.sync({waitFor: bp.Event("ClosingRequest_0"), block:[bp.Event("Lower"), bp.Event("KeepDown")]});
             p_5_x += 1;
         } else {
-            event = bp.sync({waitFor: [bp.Event("ClosingRequest_0"), bp.Event("Lower"), bp.Event("KeepDown")]});
-            if (event.name.equals("ClosingRequest_0")){
+            event = bp.sync({waitFor: [bp.Event("ClosingRequest_0"), bp.Event("Lower"), bp.Event("KeepDown")]}).name;
+            if (event.equals("ClosingRequest_0")){
                 p_5_x += 1;
             } else {
                 p_5_x -= 1;
@@ -125,28 +125,28 @@ bp.registerBThread("p_5", function() {
 });
 
 bp.registerBThread("p_6", function() {
-    var p_6_x = n;
-    var event;
+    let p_6_x = n;
+    let event;
     while (true){
         if(p_6_x >= n){
-            event = bp.sync({waitFor: [bp.Event("ClosingRequest_0"), bp.Event("OpeningRequest"), bp.Event("Raise")]});
-            if (event.name.equals("OpeningRequest")){
+            event = bp.sync({waitFor: [bp.Event("ClosingRequest_0"), bp.Event("OpeningRequest"), bp.Event("Raise")]}).name;
+            if (event.equals("OpeningRequest")){
                 p_6_x += 1;
             } else {
-                if (event.name.equals("ClosingRequest_0")){
+                if (event.equals("ClosingRequest_0")){
                     p_6_x -= 1;
                 }
             }
         } else {
             if(p_6_x >= 1){
-                event = bp.sync({waitFor: [bp.Event("ClosingRequest_0"), bp.Event("OpeningRequest")], block:bp.Event("Raise")});
-                if (event.name.equals("OpeningRequest")){
+                event = bp.sync({waitFor: [bp.Event("ClosingRequest_0"), bp.Event("OpeningRequest")], block:bp.Event("Raise")}).name;
+                if (event.equals("OpeningRequest")){
                     p_6_x += 1;
                 } else {
                     p_6_x -= 1;
                 }
             } else {
-                event = bp.sync({waitFor: bp.Event("OpeningRequest"), block:[bp.Event("Raise"), bp.Event("ClosingRequest_0")]});
+                event = bp.sync({waitFor: bp.Event("OpeningRequest"), block:[bp.Event("Raise"), bp.Event("ClosingRequest_0")]}).name;
                 p_6_x += 1;
             }
         }
@@ -154,15 +154,15 @@ bp.registerBThread("p_6", function() {
 });
 
 bp.registerBThread("p_7", function() {
-    var p_7_x = 1;
-    var event;
+    let p_7_x = 1;
+    let event;
     while (true){
         if(p_7_x < 1){
             bp.sync({waitFor: [bp.Event("Raise"), bp.Event("PrematureRaise")], block:bp.Event("Lower")});
             p_7_x += 1;
         } else {
-            event = bp.sync({waitFor: [bp.Event("Raise"), bp.Event("Lower"), bp.Event("PrematureRaise")]});
-            if (event.name.equals("Raise") || event.name.equals("PrematureRaise")){
+            event = bp.sync({waitFor: [bp.Event("Raise"), bp.Event("Lower"), bp.Event("PrematureRaise")]}).name;
+            if (event.equals("Raise") || event.equals("PrematureRaise")){
                 p_7_x += 1;
             } else {
                 p_7_x -= 1;
@@ -172,22 +172,22 @@ bp.registerBThread("p_7", function() {
 });
 
 bp.registerBThread("p_8", function() {
-    var p_8_x = 0;
-    var event;
+    let p_8_x = 0;
+    let event;
     while (true){
         if(p_8_x < 1){
-            event = bp.sync({waitFor: bp.Event("Lower"), block:[bp.Event("Raise"), bp.Event("PrematureRaise"), bp.Event("KeepDown")]});
-            if (event.name.equals("Lower")){
+            event = bp.sync({waitFor: bp.Event("Lower"), block:[bp.Event("Raise"), bp.Event("PrematureRaise"), bp.Event("KeepDown")]}).name;
+            if (event.equals("Lower")){
                 p_8_x += 1;
             } else {
                 p_8_x -= 1;
             }
         } else {
-            event = bp.sync({waitFor: [bp.Event("Lower"), bp.Event("KeepDown"), bp.Event("Raise"), bp.Event("PrematureRaise")]});
-            if (event.name.equals("Lower")){
+            event = bp.sync({waitFor: [bp.Event("Lower"), bp.Event("KeepDown"), bp.Event("Raise"), bp.Event("PrematureRaise")]}).name;
+            if (event.equals("Lower")){
                 p_8_x += 1;
             } else {
-                if (event.name.equals("Raise") || event.name.equals("PrematureRaise")){
+                if (event.equals("Raise") || event.equals("PrematureRaise")){
                     p_8_x -= 1;
                 }
             }
@@ -196,18 +196,18 @@ bp.registerBThread("p_8", function() {
 });
 
 bp.registerBThread("p_9", function() {
-    var p_9_x = 0;
-    var event;
+    let p_9_x = 0;
+    let event;
     while (true){
         if(p_9_x < 1){
-            event = bp.sync({waitFor: [bp.Event("Lower"), bp.Event("KeepDown")], block:[Enters, Leavings]});
+            event = bp.sync({waitFor: [bp.Event("Lower"), bp.Event("KeepDown")], block:[Enters, Leavings]}).name;
             p_9_x += 1;
         } else {
-            event = bp.sync({waitFor: [bp.Event("Lower"), bp.Event("KeepDown"), Enters, Leavings]});
-            if (event.name.equals("Lower") || event.name.equals("KeepDown")){
+            event = bp.sync({waitFor: [bp.Event("Lower"), bp.Event("KeepDown"), Enters, Leavings]}).name;
+            if (event.equals("Lower") || event.equals("KeepDown")){
                 p_9_x += 1;
             }
-            if (event.name.startsWith("Leaving")){
+            if (event.startsWith("Leaving")){
                 p_9_x -= 1;
             }
         }

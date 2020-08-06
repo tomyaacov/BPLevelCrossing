@@ -12,7 +12,7 @@ public class ModelsCompareRunner {
     public static void main(final String[] args) throws Exception {
 
         ModelComparingESS ess = new ModelComparingESS(1);
-        BProgram bProgram = new ResourceBProgram(Arrays.asList("level_crossing_assistant.js", "lc_pn_check.js", "utils.js"),"joint model", ess);
+        BProgram bProgram = new ResourceBProgram(Arrays.asList("lc_bp_v1.js", "lc_pn_check_before.js", "utils.js"),"joint model", ess);
 
         Dfs vrf = new Dfs();
         vrf.setDebugMode(false);

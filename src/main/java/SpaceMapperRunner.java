@@ -8,7 +8,7 @@ public class SpaceMapperRunner {
 
     public static void main(String[] args) throws Exception {
 
-        String [] files = {"src/main/resources/lc_pn_faults.js"};
+        String [] files = {"src/main/resources/lc_pn_check_before.js"};
         List<Path> inputPaths = new ArrayList<>(args.length);
         for ( String arg : files ) {
             Path fn = Paths.get(arg);
@@ -22,7 +22,7 @@ public class SpaceMapperRunner {
         StateSpaceMapper mpr = new StateSpaceMapper();
         inputPaths.stream().forEach( mpr::addFile );
 
-        mpr.mapSpace("lc_pn_faults.fsm");
+        mpr.mapSpace("lc_pn_check.fsm");
         System.out.println("// done");
     }
 
