@@ -2,74 +2,46 @@ import il.ac.bgu.cs.bp.bpjs.analysis.VerificationResult;
 import il.ac.bgu.cs.bp.bpjs.model.BEvent;
 import il.ac.bgu.cs.bp.bpjs.model.BProgram;
 import il.ac.bgu.cs.bp.bpjs.model.ResourceBProgram;
+import il.ac.bgu.cs.bp.bpjs.model.eventselection.SimpleEventSelectionStrategy;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
+import java.util.stream.Collectors;
 
 public class ModelsCompareRunner {
 
     public static void main(final String[] args) throws Exception {
-
-        ModelComparingESS ess = new ModelComparingESS(1);
-        BProgram bProgram = new ResourceBProgram(Arrays.asList("lc_bp_v1.js", "lc_pn_check_before.js", "utils.js"),"joint model", ess);
-
-        Dfs vrf = new Dfs();
-        vrf.setDebugMode(false);
-        vrf.setProgressListener(new PrintDfsListener());  // add a listener to print progress
-        VerificationResult res = vrf.verify(bProgram);
-        System.out.println(res.getScannedStatesCount());
-
-        System.out.println(res.isViolationFound());  // true iff a counter example was found
-        if(res.isViolationFound()) {
-            res.getViolation().get().getCounterExampleTrace().getNodes().forEach(n -> System.out.println(n.getEvent()));      // an Optional<Violation>
+        SimpleEventSelectionStrategy ess = new SimpleEventSelectionStrategy();
+        List<String> eventsToRemove = Arrays.asList("ClosingRequest()", "OpeningRequest()", "KeepDown()");
+        PathsFinder pf = new PathsFinder();
+        String pnRuns = pf.run(new ResourceBProgram("lc_pn_check.js", ess), "lc_pn_check_paths_1.csv");
+        pf = new PathsFinder();
+        String bpRuns = pf.run(new ResourceBProgram("lc_bp_v1.js", ess), "lc_bp_v1_paths_1.csv");
+        for (String e : eventsToRemove){
+            pnRuns = pnRuns.replace("," + e, "");
         }
-    }
+        String[] pnRunsArr = pnRuns.split("\n",0);
+        List<String> bpRunsArr = Arrays.asList(bpRuns.split("\n",0));
+        //Create set from array elements
+        LinkedHashSet<String> linkedHashSet = new LinkedHashSet<>( Arrays.asList(pnRunsArr) );
 
-    public static void cleanHelperEvents(ArrayList<ArrayList<BEvent>> possiblePaths){
-        List<String> helperEvents = Arrays.asList("ClosingRequest", "OpeningRequest", "KeepDown");
-        possiblePaths.forEach(path -> path.removeIf(e -> helperEvents.contains(e.name)));
-    }
+        //Get back the array without duplicates
+        List<String> pnRunsArrUnique = new LinkedList<>();
+        pnRunsArrUnique.addAll(0,linkedHashSet);
 
-    public static ArrayList<ArrayList<BEvent>> removeSubPath(ArrayList<ArrayList<BEvent>> possiblePaths){
-        ArrayList<ArrayList<BEvent>> possiblePathsCopy = new ArrayList<>();
-        ArrayList<BEvent> pathCopy;
-        for(ArrayList<BEvent> path1:possiblePaths) {
-            pathCopy = new ArrayList<>();
-            for (BEvent event : path1) {
-                pathCopy.add(new BEvent(event.getName()));
-            }
-            possiblePathsCopy.add(pathCopy);
-        }
+        List<String> onlyPNRuns = pnRunsArrUnique.stream().filter(r -> !bpRunsArr.contains(r)).collect(Collectors.toList());
+        List<String> onlyBPRuns = bpRunsArr.stream().filter(r -> !pnRunsArrUnique.contains(r)).collect(Collectors.toList());
+        List<String> bothRuns = new LinkedList<>();
 
-        for(ArrayList<BEvent> path1:possiblePaths){
-            for(ArrayList<BEvent> path2:possiblePaths){
-                if(path1.equals(path2)){
-                    continue;
-                }
-                for (int i=0; i <= path1.size(); i++){
-                    if (i == path1.size()){
-                        possiblePathsCopy.remove(path1);
-                        break;
-                    }
-                    if (i >= path2.size()) {
-                        break;
-                    }
-                    if (!path1.get(i).equals(path2.get(i))){
-                        break;
-                    }
-                }
-            }
-        }
-        return possiblePathsCopy;
-    }
-
-    public static void printPossiblePaths(ArrayList<ArrayList<BEvent>> possiblePaths){
-        for(ArrayList<BEvent> path:possiblePaths){
-            for(BEvent e:path){
-                System.out.print(e.getName() + ",");
-            }
-            System.out.println();
+        if (onlyBPRuns.size() == 0 && onlyPNRuns.size() == 0){
+            System.out.println("Models are identical");
+            System.out.println("Models possible runs:");
+            System.out.println(bpRunsArr);
+        } else {
+            System.out.println("Models not equal");
+            System.out.println("PN unique runs:");
+            System.out.println(onlyPNRuns);
+            System.out.println("BP unique runs:");
+            System.out.println(onlyBPRuns);
         }
     }
 }

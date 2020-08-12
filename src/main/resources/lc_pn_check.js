@@ -1,49 +1,44 @@
-const n = 1;
-const Enters = bp.EventSet("Enters", function(evt) {return evt.name.startsWith("Entering")});
-const Approachings = bp.EventSet("Approachings", function(evt) {return evt.name.startsWith("Approaching")});
-const Leavings = bp.EventSet("Leavings", function(evt) {return evt.name.startsWith("Leaving")});
-const ClosingRequests = bp.EventSet("ClosingRequests", function(evt) {return evt.name.startsWith("ClosingRequest_0")});
+importPackage(Packages.events);
+var n = 1;
 
 for (var i = 0; i < n; i++){
     (function(i){
         bp.registerBThread("p_" + i + "_1", function() {
             while (true){
-                bp.sync({waitFor: bp.Event("Approaching_" + i)});
-                bp.sync({waitFor: bp.Event("Leaving_" + i), block:bp.Event("Approaching_" + i)});
+                bp.sync({waitFor: Approaching(i)});
+                bp.sync({waitFor: Leaving(i), block: Approaching(i)});
             }
         });
         bp.registerBThread("p_" + i + "_2", function() {
             while (true){
-                bp.sync({waitFor: bp.Event("Approaching_" + i), block:bp.Event("Entering_" + i)});
-                bp.sync({waitFor: bp.Event("Entering_" + i)});
+                bp.sync({waitFor: Approaching(i), block:Entering(i)});
+                bp.sync({waitFor: Entering(i)});
             }
         });
         bp.registerBThread("p_" + i + "_3", function() {
             while (true){
-                bp.sync({waitFor: bp.Event("Entering_" + i), block:bp.Event("Leaving_" + i)});
-                bp.sync({waitFor: bp.Event("Leaving_" + i)});
+                bp.sync({waitFor: Entering(i), block:Leaving(i)});
+                bp.sync({waitFor: Leaving(i)});
             }
         });
         bp.registerBThread("phelper_" + i, function() {
             while (true){
-                bp.sync({request: [bp.Event("Approaching_" + i),
-                        bp.Event("Entering_" + i),
-                        bp.Event("Leaving_" + i)]});
+                bp.sync({request: [Approaching(i), Entering(i), Leaving(i)]});
             }
         });
     })(i);
 }
 
 bp.registerBThread("p_1", function() {
-    let p_1_x = 0;
-    let event;
+    var p_1_x = 0;
+    //var event;
     while (true){
         if(p_1_x < 1){
-            bp.sync({waitFor: Approachings, block:bp.Event("ClosingRequest_0")});
+            bp.sync({waitFor: Approaching(), block:ClosingRequest(), interrupt: Marking(p_1_x)});
             p_1_x += 1;
         } else {
-            event = bp.sync({waitFor: [bp.Event("ClosingRequest_0"), Approachings]}).name;
-            if (event.equals("ClosingRequest_0")){
+            //event = bp.sync({waitFor: [ClosingRequest(), Approaching()]}).name;
+            if (bp.sync({waitFor: [ClosingRequest(), Approaching()], interrupt: Marking(p_1_x)}).name.startsWith("ClosingRequest")){
                 p_1_x -= 1;
             } else {
                 p_1_x += 1;
@@ -53,15 +48,15 @@ bp.registerBThread("p_1", function() {
 });
 
 bp.registerBThread("p_2", function() {
-    let p_2_x = n;
-    let event;
+    var p_2_x = n;
+    //var event;
     while (true){
         if(p_2_x < 1){
-            bp.sync({waitFor: bp.Event("OpeningRequest"), block:bp.Event("ClosingRequest_0")});
+            bp.sync({waitFor: OpeningRequest(), block:ClosingRequest(), interrupt: Marking(p_2_x)});
             p_2_x += 1;
         } else {
-            event = bp.sync({waitFor: [bp.Event("ClosingRequest_0"), bp.Event("OpeningRequest")]}).name;
-            if (event.equals("ClosingRequest_0")){
+            //event = bp.sync({waitFor: [ClosingRequest(), OpeningRequest()]}).name;
+            if (bp.sync({waitFor: [ClosingRequest(), OpeningRequest()], interrupt: Marking(p_2_x)}).name.startsWith("ClosingRequest")){
                 p_2_x -= 1;
             } else {
                 p_2_x += 1;
@@ -71,15 +66,15 @@ bp.registerBThread("p_2", function() {
 });
 
 bp.registerBThread("p_3", function() {
-    let p_3_x = 0;
-    let event;
+    var p_3_x = 0;
+    //var event;
     while (true){
         if(p_3_x < 1){
-            bp.sync({waitFor: bp.Event("ClosingRequest_0"), block:bp.Event("OpeningRequest")}).name;
+            bp.sync({waitFor: ClosingRequest(), block:OpeningRequest(), interrupt: Marking(p_3_x)});
             p_3_x += 1;
         } else {
-            event = bp.sync({waitFor: [bp.Event("ClosingRequest_0"), bp.Event("OpeningRequest")]});
-            if (event.equals("OpeningRequest")){
+            //event = bp.sync({waitFor: [ClosingRequest(), OpeningRequest()]}).name;
+            if (bp.sync({waitFor: [ClosingRequest(), OpeningRequest()], interrupt: Marking(p_3_x)}).name.startsWith("OpeningRequest")){
                 p_3_x -= 1;
             } else {
                 p_3_x += 1;
@@ -89,15 +84,15 @@ bp.registerBThread("p_3", function() {
 });
 
 bp.registerBThread("p_4", function() {
-    let p_4_x = 0;
-    let event;
+    var p_4_x = 0;
+    //var event;
     while (true){
         if(p_4_x < 1){
-            bp.sync({waitFor: Leavings, block:bp.Event("OpeningRequest")});
+            bp.sync({waitFor: Leaving(), block:OpeningRequest(), interrupt: Marking(p_4_x)});
             p_4_x += 1;
         } else {
-            event = bp.sync({waitFor: [bp.Event("OpeningRequest"), Leavings]}).name;
-            if (event.equals("OpeningRequest")){
+            //event = bp.sync({waitFor: [OpeningRequest(), Leaving()]}).name;
+            if (bp.sync({waitFor: [OpeningRequest(), Leaving()], interrupt: Marking(p_4_x)}).name.startsWith("OpeningRequest")){
                 p_4_x -= 1;
             } else {
                 p_4_x += 1;
@@ -107,15 +102,15 @@ bp.registerBThread("p_4", function() {
 });
 
 bp.registerBThread("p_5", function() {
-    let p_5_x = 0;
-    let event;
+    var p_5_x = 0;
+    //var event;
     while (true){
         if(p_5_x < 1){
-            bp.sync({waitFor: bp.Event("ClosingRequest_0"), block:[bp.Event("Lower"), bp.Event("KeepDown")]});
+            bp.sync({waitFor: ClosingRequest(), block:[Lower(), KeepDown()], interrupt: Marking(p_5_x)});
             p_5_x += 1;
         } else {
-            event = bp.sync({waitFor: [bp.Event("ClosingRequest_0"), bp.Event("Lower"), bp.Event("KeepDown")]}).name;
-            if (event.equals("ClosingRequest_0")){
+            //event = bp.sync({waitFor: [ClosingRequest(), Lower(), KeepDown()]}).name;
+            if (bp.sync({waitFor: [ClosingRequest(), Lower(), KeepDown()], interrupt: Marking(p_5_x)}).name.startsWith("ClosingRequest")){
                 p_5_x += 1;
             } else {
                 p_5_x -= 1;
@@ -125,28 +120,27 @@ bp.registerBThread("p_5", function() {
 });
 
 bp.registerBThread("p_6", function() {
-    let p_6_x = n;
-    let event;
+    var p_6_x = n;
     while (true){
         if(p_6_x >= n){
-            event = bp.sync({waitFor: [bp.Event("ClosingRequest_0"), bp.Event("OpeningRequest"), bp.Event("Raise")]}).name;
-            if (event.equals("OpeningRequest")){
+            var event = bp.sync({waitFor: [ClosingRequest(), OpeningRequest(), Raise()], interrupt: Marking(p_6_x)}).name;
+            if (event.startsWith("OpeningRequest")){
                 p_6_x += 1;
             } else {
-                if (event.equals("ClosingRequest_0")){
+                if (event.startsWith("ClosingRequest")){
                     p_6_x -= 1;
                 }
             }
         } else {
             if(p_6_x >= 1){
-                event = bp.sync({waitFor: [bp.Event("ClosingRequest_0"), bp.Event("OpeningRequest")], block:bp.Event("Raise")}).name;
-                if (event.equals("OpeningRequest")){
+                //event = bp.sync({waitFor: [ClosingRequest(), OpeningRequest()], block:Raise()}).name;
+                if (bp.sync({waitFor: [ClosingRequest(), OpeningRequest()], block:Raise(), interrupt: Marking(p_6_x)}).name.startsWith("OpeningRequest")){
                     p_6_x += 1;
                 } else {
                     p_6_x -= 1;
                 }
             } else {
-                event = bp.sync({waitFor: bp.Event("OpeningRequest"), block:[bp.Event("Raise"), bp.Event("ClosingRequest_0")]}).name;
+                bp.sync({waitFor: OpeningRequest(), block:[Raise(), ClosingRequest()], interrupt: Marking(p_6_x)});
                 p_6_x += 1;
             }
         }
@@ -154,15 +148,15 @@ bp.registerBThread("p_6", function() {
 });
 
 bp.registerBThread("p_7", function() {
-    let p_7_x = 1;
-    let event;
+    var p_7_x = 1;
+    //var event;
     while (true){
         if(p_7_x < 1){
-            bp.sync({waitFor: [bp.Event("Raise"), bp.Event("PrematureRaise")], block:bp.Event("Lower")});
+            bp.sync({waitFor: Raise(), block:Lower(), interrupt: Marking(p_7_x)});
             p_7_x += 1;
         } else {
-            event = bp.sync({waitFor: [bp.Event("Raise"), bp.Event("Lower"), bp.Event("PrematureRaise")]}).name;
-            if (event.equals("Raise") || event.equals("PrematureRaise")){
+            //event = bp.sync({waitFor: [Raise(), Lower()]}).name;
+            if (bp.sync({waitFor: [Raise(), Lower()], interrupt: Marking(p_7_x)}).name.startsWith("Raise")){
                 p_7_x += 1;
             } else {
                 p_7_x -= 1;
@@ -172,22 +166,21 @@ bp.registerBThread("p_7", function() {
 });
 
 bp.registerBThread("p_8", function() {
-    let p_8_x = 0;
-    let event;
+    var p_8_x = 0;
     while (true){
         if(p_8_x < 1){
-            event = bp.sync({waitFor: bp.Event("Lower"), block:[bp.Event("Raise"), bp.Event("PrematureRaise"), bp.Event("KeepDown")]}).name;
-            if (event.equals("Lower")){
+            //event = bp.sync({waitFor: Lower(), block:[Raise(), KeepDown()]}).name;
+            if (bp.sync({waitFor: Lower(), block:[Raise(), KeepDown()], interrupt: Marking(p_8_x)}).name.startsWith("Lower")){
                 p_8_x += 1;
             } else {
                 p_8_x -= 1;
             }
         } else {
-            event = bp.sync({waitFor: [bp.Event("Lower"), bp.Event("KeepDown"), bp.Event("Raise"), bp.Event("PrematureRaise")]}).name;
-            if (event.equals("Lower")){
+            var event = bp.sync({waitFor: [Lower(), KeepDown(), Raise()], interrupt: Marking(p_8_x)}).name;
+            if (event.startsWith("Lower")){
                 p_8_x += 1;
             } else {
-                if (event.equals("Raise") || event.equals("PrematureRaise")){
+                if (event.startsWith("Raise")){
                     p_8_x -= 1;
                 }
             }
@@ -196,15 +189,14 @@ bp.registerBThread("p_8", function() {
 });
 
 bp.registerBThread("p_9", function() {
-    let p_9_x = 0;
-    let event;
+    var p_9_x = 0;
     while (true){
         if(p_9_x < 1){
-            event = bp.sync({waitFor: [bp.Event("Lower"), bp.Event("KeepDown")], block:[Enters, Leavings]}).name;
+            bp.sync({waitFor: [Lower(), KeepDown()], block:[Entering(), Leaving()], interrupt: Marking(p_9_x)});
             p_9_x += 1;
         } else {
-            event = bp.sync({waitFor: [bp.Event("Lower"), bp.Event("KeepDown"), Enters, Leavings]}).name;
-            if (event.equals("Lower") || event.equals("KeepDown")){
+            var event = bp.sync({waitFor: [Lower(), KeepDown(), Entering(), Leaving()], interrupt: Marking(p_9_x)}).name;
+            if (event.startsWith("Lower")|| event.startsWith("KeepDown")){
                 p_9_x += 1;
             }
             if (event.startsWith("Leaving")){
@@ -216,10 +208,10 @@ bp.registerBThread("p_9", function() {
 
 bp.registerBThread("phelper", function() {
     while (true){
-        bp.sync({request: [bp.Event("ClosingRequest_0"),
-                bp.Event("OpeningRequest"),
-                bp.Event("Lower"),
-                bp.Event("Raise"),
-                bp.Event("KeepDown")]});
+        bp.sync({request: [ClosingRequest(),
+                OpeningRequest(),
+                Lower(),
+                Raise(),
+                KeepDown()]});
     }
 });

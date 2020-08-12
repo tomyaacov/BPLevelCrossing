@@ -8,7 +8,7 @@ public class SpaceMapperRunner {
 
     public static void main(String[] args) throws Exception {
 
-        String [] files = {"src/main/resources/lc_pn_check_before.js"};
+        String [] files = {"src/main/resources/lc_bp_v1.js"};
         List<Path> inputPaths = new ArrayList<>(args.length);
         for ( String arg : files ) {
             Path fn = Paths.get(arg);

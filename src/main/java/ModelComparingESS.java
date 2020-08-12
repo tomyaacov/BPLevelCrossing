@@ -19,6 +19,8 @@ import events.*;
 
 
 public class ModelComparingESS extends SimpleEventSelectionStrategy {
+
+    public Set<BEvent> globalCheck = new HashSet<>();
     public ModelComparingESS(long seed) {
         super(seed);
     }
@@ -66,32 +68,30 @@ public class ModelComparingESS extends SimpleEventSelectionStrategy {
 
         List<BEvent> helperEvents = Arrays.asList(new ClosingRequest(), new OpeningRequest(), new KeepDown());
 
-        Context.enter();
+        //Context.enter();
         Set<BEvent> helperRequestedAndNotBlocked1 = requested1.stream()
                 .filter( req -> !blocked1.contains(req) )
                 .filter(req -> (helperEvents.contains(req)))
                 .collect( toSet() );
 
-        Context.enter();
+        //Context.enter();
         Set<BEvent> requestedAndNotBlocked1 = requested1.stream()
                 .filter( req -> !blocked1.contains(req) )
                 .collect( toSet() );
 
-        Context.enter();
+        //Context.enter();
         Set<BEvent> requestedAndNotBlocked2 = requested2.stream()
                 .filter( req -> !blocked2.contains(req) )
                 .collect( toSet() );
+        //Context.enter();
+        Set<BEvent> check = requestedAndNotBlocked1.stream()
+                .filter(req -> !(helperEvents.contains(req)))
+                .collect( toSet() );
 
-        if(helperRequestedAndNotBlocked1.size() > 0){
-            Context.enter();
-            Set<BEvent> check = requestedAndNotBlocked1.stream()
-                    .filter(req -> !(helperEvents.contains(req)))
-                    .collect( toSet() );
+        globalCheck.addAll(check);
 
-            List<BEvent> aList = new ArrayList<BEvent>();
-            aList.addAll(requestedAndNotBlocked2);
-
-            if (!(aList.containsAll(check))){
+        if(helperRequestedAndNotBlocked1.size() == 0){
+            if (!(listsEqual(requestedAndNotBlocked1, globalCheck))){
                 Set<BEvent> a = new HashSet<BEvent>();
                 a.add(new BEvent("Violation"));
                 System.out.println("optional events in petri net model");
@@ -100,16 +100,7 @@ public class ModelComparingESS extends SimpleEventSelectionStrategy {
                 System.out.println(requestedAndNotBlocked2);
                 return a;
             }
-        } else {
-            if (!(listsEqual(requestedAndNotBlocked1, requestedAndNotBlocked2))){
-                Set<BEvent> a = new HashSet<BEvent>();
-                a.add(new BEvent("Violation"));
-                System.out.println("optional events in petri net model");
-                System.out.println(requestedAndNotBlocked1);
-                System.out.println("optional events in bp model");
-                System.out.println(requestedAndNotBlocked2);
-                return a;
-            }
+            globalCheck = new HashSet<>();
         }
 
 

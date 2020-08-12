@@ -21,7 +21,7 @@ for (var i = 0; i < n; i++){
         bp.registerBThread("Trains cannot enter railway " + i + " when the barier is down", function() {
             while (true){
                 bp.sync({waitFor: Lower(), block: Entering(i)});
-                bp.sync({waitFor: Raise()});
+                bp.sync({waitFor: Raise()});//
             }
         });
 
@@ -32,6 +32,6 @@ bp.registerBThread("Lower the barrier when a train is approaching and then raise
     while (true){
         bp.sync({waitFor: Approaching()});
         bp.sync({request: Lower()});
-        bp.sync({request: Raise()});
+        bp.sync({request: Raise()});//
     }
 });
