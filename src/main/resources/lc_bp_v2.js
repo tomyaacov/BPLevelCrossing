@@ -1,5 +1,6 @@
 importPackage(Packages.events);
 const n = 1;
+const x = [Approaching(0), Entering(0), Leaving(0), Approaching(1), Entering(1), Leaving(1), Raise(), Lower()];
 
 for (var i = 0; i < n; i++){
     (function(i){
@@ -31,17 +32,20 @@ for (var i = 0; i < n; i++){
                 bp.sync({waitFor: Lower()});
                 bp.sync({waitFor: Leaving(i), block: Raise()});
             }
-            /*
-optional events in petri net model
-[[BEvent name:Entering(0)]]
-optional events in bp model
-[[BEvent name:Raise], [BEvent name:Entering(0)]]
-run
-Optional[[BEvent name:Approaching(0)]]
-Optional[[BEvent name:ClosingRequest()]]
-Optional[[BEvent name:Lower]]
- */
+
         });
+
+        // bp.registerBThread("Block Path 1" + i, function() {
+        //     while (true){
+        //         bp.sync({waitFor: Approaching(i)});
+        //         bp.sync({waitFor: Lower()});
+        //         bp.sync({waitFor: Entering(i)});
+        //         bp.sync({waitFor: Leaving(i)});
+        //         bp.sync({waitFor: Raise()});
+        //         bp.sync({block: Lower(), waitFor:bp.all});
+        //     }
+        //
+        // });
 
     })(i);
 }

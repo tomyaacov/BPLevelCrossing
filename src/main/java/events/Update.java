@@ -9,7 +9,7 @@ public class Update extends BEvent {
     public Set<BEvent> requestedAndNotBlockedSystem2;
 
     public Update(){
-        super("Update()");
+        super("Update");
     }
 
 }

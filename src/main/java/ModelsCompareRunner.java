@@ -13,9 +13,9 @@ public class ModelsCompareRunner {
         SimpleEventSelectionStrategy ess = new SimpleEventSelectionStrategy();
         List<String> eventsToRemove = Arrays.asList("ClosingRequest()", "OpeningRequest()", "KeepDown()");
         PathsFinder pf = new PathsFinder();
-        String pnRuns = pf.run(new ResourceBProgram("lc_pn_check.js", ess), "lc_pn_check_paths_1.csv");
-        pf = new PathsFinder();
         String bpRuns = pf.run(new ResourceBProgram("lc_bp_v1.js", ess), "lc_bp_v1_paths_1.csv");
+        pf = new PathsFinder();
+        String pnRuns = pf.run(new ResourceBProgram("lc_pn_check_before.js", ess), "lc_pn_check_before_paths_1.csv");
         for (String e : eventsToRemove){
             pnRuns = pnRuns.replace("," + e, "");
         }

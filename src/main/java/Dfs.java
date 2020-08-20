@@ -1,3 +1,6 @@
+import events.ClosingRequest;
+import events.KeepDown;
+import events.OpeningRequest;
 import il.ac.bgu.cs.bp.bpjs.analysis.*;
 import il.ac.bgu.cs.bp.bpjs.analysis.violations.JsErrorViolation;
 import il.ac.bgu.cs.bp.bpjs.analysis.violations.Violation;
@@ -30,7 +33,7 @@ public class Dfs {
         }
     };
     private long visitedEdgeCount;
-    private VisitedStateStore visited = new BThreadSnapshotVisitedStateStore();
+    private VisitedStateStore visited = new BPSSVisitedStateStore();
     private long maxTraceLength = DEFAULT_MAX_TRACE;
     private final List<Node> currentPath = new ArrayList<>();
     private ProgressListener listener;
@@ -40,6 +43,8 @@ public class Dfs {
     private final Set<ExecutionTraceInspection> inspections = new HashSet<>();
     private ArrayExecutionTrace trace;
     public ArrayList<ArrayList<BEvent>> possiblePaths = new ArrayList();
+    public Automaton automaton = new Automaton();
+
 
     public Dfs() {
     }
@@ -75,6 +80,7 @@ public class Dfs {
         push(aStartNode);
         Violation v = inspectCurrentTrace();
         if ( v != null ) return v;
+        automaton.setInitial(aStartNode.getSystemState());
 
         while (!isPathEmpty()) {
             iterationCount++;
@@ -133,8 +139,9 @@ public class Dfs {
             try {
                 Node possibleNextNode = src.getNextNode(nextEvent, execSvc);
                 visitedEdgeCount++;
-
                 BProgramSyncSnapshot pns = possibleNextNode.getSystemState();
+
+                automaton.addTransition(src.getSystemState(), nextEvent, pns);
                 if (visited.isVisited(pns) ) {
                     boolean cycleFound = false;
                     for ( int idx=0; idx<currentPath.size() && !cycleFound; idx++) {

@@ -8,12 +8,12 @@ public class ClosingRequest extends BEvent{
     public int i;
 
     public ClosingRequest(int i){
-        super("ClosingRequest("+i+")");
+        super("ClosingRequest"+i);
         this.i = i;
     }
 
     public ClosingRequest(){
-        super("ClosingRequest()");
+        super("ClosingRequest");
         this.i = -1;
     }
 

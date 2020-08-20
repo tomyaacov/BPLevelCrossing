@@ -8,12 +8,12 @@ public class Approaching extends BEvent{
     public int i;
 
     public Approaching(int i){
-        super("Approaching("+i+")");
+        super("Approaching"+i);
         this.i = i;
     }
 
     public Approaching(){
-        super("Approaching(-1)");
+        super("Approaching");
         this.i = -1;
     }
 

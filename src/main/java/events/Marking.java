@@ -6,12 +6,12 @@ public class Marking extends BEvent {
     public int i;
 
     public Marking(int i){
-        super("Marking("+i+")");
+        super("Marking"+i);
         this.i = i;
     }
 
     public Marking(){
-        super("Marking(-1)");
+        super("Marking");
         this.i = -1;
     }
 
