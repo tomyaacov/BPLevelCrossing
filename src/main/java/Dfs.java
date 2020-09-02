@@ -142,6 +142,7 @@ public class Dfs {
                 BProgramSyncSnapshot pns = possibleNextNode.getSystemState();
 
                 automaton.addTransition(src.getSystemState(), nextEvent, pns);
+                //automaton.setAccepting(pns, 0);
                 if (visited.isVisited(pns) ) {
                     boolean cycleFound = false;
                     for ( int idx=0; idx<currentPath.size() && !cycleFound; idx++) {

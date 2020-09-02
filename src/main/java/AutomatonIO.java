@@ -33,7 +33,7 @@ public class AutomatonIO {
         gs.setType("FiniteStateAutomaton");
 
         gs.setAlphabet(new Alphabet());
-        gs.alphabet.setType("Propositional");
+        gs.alphabet.setType("Classical");
 
         gs.setStateSet(new StateSet());
 
@@ -114,9 +114,9 @@ public class AutomatonIO {
             }
         }
 
-//        for (BProgramSyncSnapshot s : aut.getAcceptingStates()) {
-//            gs.acc.stateID.add(IdAssignner.getId(s));
-//        }
+        for (BProgramSyncSnapshot s : aut.getAcceptingStates(0)) {
+            gs.acc.stateID.add(IdAssignner.getId(s));
+        }
 
         // Add a single initial state
 //        formalmethodsintro.base.goal.GoalStructure.StateSet.State stt = new formalmethodsintro.base.goal.GoalStructure.StateSet.State();

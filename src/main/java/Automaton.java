@@ -72,6 +72,7 @@ public class Automaton {
             }
         }
         Set<BProgramSyncSnapshot> reachableStates = getReachableStates();
+        accepting.put(0, reachableStates);
         transitions = transitions.entrySet()
                                 .stream()
                                 .filter(map -> reachableStates.contains(map.getKey()))
