@@ -1,1 +1,164 @@
-<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Structure label-on="Transition" type="FiniteStateAutomaton"><Alphabet type="Propositional"><Proposition>Approaching0</Proposition><Proposition>Raise</Proposition><Proposition>Leaving0</Proposition><Proposition>Entering0</Proposition><Proposition>Lower</Proposition></Alphabet><StateSet><State sid="1"><Label>-2049833722</Label><Y>0</Y><X>0</X></State><State sid="2"><Label>449622772</Label><Y>0</Y><X>0</X></State><State sid="3"><Label>-1855082648</Label><Y>0</Y><X>0</X></State><State sid="4"><Label>-939571592</Label><Y>0</Y><X>0</X></State><State sid="5"><Label>-465888284</Label><Y>0</Y><X>0</X></State><State sid="6"><Label>-937873364</Label><Y>0</Y><X>0</X></State><State sid="7"><Label>439031758</Label><Y>0</Y><X>0</X></State><State sid="8"><Label>-32953322</Label><Y>0</Y><X>0</X></State><State sid="9"><Label>-950162606</Label><Y>0</Y><X>0</X></State><State sid="10"><Label>312109458</Label><Y>0</Y><X>0</X></State><State sid="11"><Label>1227620514</Label><Y>0</Y><X>0</X></State></StateSet><InitialStateSet><StateID>1</StateID></InitialStateSet><TransitionSet complete="false"><Transition tid="1"><From>1</From><To>2</To><Label>Approaching0</Label></Transition><Transition tid="2"><From>3</From><To>4</To><Label>Raise</Label></Transition><Transition tid="3"><From>3</From><To>5</To><Label>Approaching0</Label></Transition><Transition tid="4"><From>6</From><To>3</To><Label>Leaving0</Label></Transition><Transition tid="5"><From>7</From><To>8</To><Label>Entering0</Label></Transition><Transition tid="6"><From>4</From><To>2</To><Label>Approaching0</Label></Transition><Transition tid="7"><From>4</From><To>9</To><Label>Lower</Label></Transition><Transition tid="8"><From>10</From><To>11</To><Label>Raise</Label></Transition><Transition tid="9"><From>10</From><To>5</To><Label>Approaching0</Label></Transition><Transition tid="10"><From>2</From><To>7</To><Label>Lower</Label></Transition><Transition tid="11"><From>11</From><To>2</To><Label>Approaching0</Label></Transition><Transition tid="12"><From>11</From><To>10</To><Label>Lower</Label></Transition><Transition tid="13"><From>9</From><To>7</To><Label>Approaching0</Label></Transition><Transition tid="14"><From>5</From><To>2</To><Label>Raise</Label></Transition><Transition tid="15"><From>5</From><To>6</To><Label>Entering0</Label></Transition><Transition tid="16"><From>8</From><To>10</To><Label>Leaving0</Label></Transition></TransitionSet><Acc type="Buchi"><StateID>7</StateID><StateID>6</StateID><StateID>3</StateID><StateID>4</StateID><StateID>2</StateID><StateID>10</StateID><StateID>11</StateID><StateID>8</StateID><StateID>5</StateID><StateID>9</StateID></Acc></Structure>
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<Structure label-on="Transition" type="FiniteStateAutomaton">
+    <Alphabet type="Propositional">
+        <Proposition>Approaching0</Proposition>
+        <Proposition>Raise</Proposition>
+        <Proposition>Leaving0</Proposition>
+        <Proposition>Entering0</Proposition>
+        <Proposition>Lower</Proposition>
+    </Alphabet>
+    <StateSet>
+        <State sid="1">
+            <Label>-2049833722</Label>
+            <Y>0</Y>
+            <X>0</X>
+        </State>
+        <State sid="2">
+            <Label>449622772</Label>
+            <Y>0</Y>
+            <X>0</X>
+        </State>
+        <State sid="3">
+            <Label>-1855082648</Label>
+            <Y>0</Y>
+            <X>0</X>
+        </State>
+        <State sid="4">
+            <Label>-939571592</Label>
+            <Y>0</Y>
+            <X>0</X>
+        </State>
+        <State sid="5">
+            <Label>-465888284</Label>
+            <Y>0</Y>
+            <X>0</X>
+        </State>
+        <State sid="6">
+            <Label>-937873364</Label>
+            <Y>0</Y>
+            <X>0</X>
+        </State>
+        <State sid="7">
+            <Label>439031758</Label>
+            <Y>0</Y>
+            <X>0</X>
+        </State>
+        <State sid="8">
+            <Label>-32953322</Label>
+            <Y>0</Y>
+            <X>0</X>
+        </State>
+        <State sid="9">
+            <Label>-950162606</Label>
+            <Y>0</Y>
+            <X>0</X>
+        </State>
+        <State sid="10">
+            <Label>312109458</Label>
+            <Y>0</Y>
+            <X>0</X>
+        </State>
+        <State sid="11">
+            <Label>1227620514</Label>
+            <Y>0</Y>
+            <X>0</X>
+        </State>
+    </StateSet>
+    <InitialStateSet>
+        <StateID>1</StateID>
+    </InitialStateSet>
+    <TransitionSet complete="false">
+        <Transition tid="1">
+            <From>1</From>
+            <To>2</To>
+            <Label>Approaching0</Label>
+        </Transition>
+        <Transition tid="2">
+            <From>3</From>
+            <To>4</To>
+            <Label>Raise</Label>
+        </Transition>
+        <Transition tid="3">
+            <From>3</From>
+            <To>5</To>
+            <Label>Approaching0</Label>
+        </Transition>
+        <Transition tid="4">
+            <From>6</From>
+            <To>3</To>
+            <Label>Leaving0</Label>
+        </Transition>
+        <Transition tid="5">
+            <From>7</From>
+            <To>8</To>
+            <Label>Entering0</Label>
+        </Transition>
+        <Transition tid="6">
+            <From>4</From>
+            <To>2</To>
+            <Label>Approaching0</Label>
+        </Transition>
+        <Transition tid="7">
+            <From>4</From>
+            <To>9</To>
+            <Label>Lower</Label>
+        </Transition>
+        <Transition tid="8">
+            <From>10</From>
+            <To>11</To>
+            <Label>Raise</Label>
+        </Transition>
+        <Transition tid="9">
+            <From>10</From>
+            <To>5</To>
+            <Label>Approaching0</Label>
+        </Transition>
+        <Transition tid="10">
+            <From>2</From>
+            <To>7</To>
+            <Label>Lower</Label>
+        </Transition>
+        <Transition tid="11">
+            <From>11</From>
+            <To>2</To>
+            <Label>Approaching0</Label>
+        </Transition>
+        <Transition tid="12">
+            <From>11</From>
+            <To>10</To>
+            <Label>Lower</Label>
+        </Transition>
+        <Transition tid="13">
+            <From>9</From>
+            <To>7</To>
+            <Label>Approaching0</Label>
+        </Transition>
+        <Transition tid="14">
+            <From>5</From>
+            <To>2</To>
+            <Label>Raise</Label>
+        </Transition>
+        <Transition tid="15">
+            <From>5</From>
+            <To>6</To>
+            <Label>Entering0</Label>
+        </Transition>
+        <Transition tid="16">
+            <From>8</From>
+            <To>10</To>
+            <Label>Leaving0</Label>
+        </Transition>
+    </TransitionSet>
+    <Acc type="Buchi">
+        <StateID>7</StateID>
+        <StateID>6</StateID>
+        <StateID>3</StateID>
+        <StateID>4</StateID>
+        <StateID>2</StateID>
+        <StateID>10</StateID>
+        <StateID>11</StateID>
+        <StateID>8</StateID>
+        <StateID>5</StateID>
+        <StateID>9</StateID>
+    </Acc>
+</Structure>

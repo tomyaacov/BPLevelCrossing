@@ -1,5 +1,5 @@
 importPackage(Packages.events);
-var n = 1;
+var n = 2;
 const x = [Approaching(0), Entering(0), Leaving(0), Approaching(1), Entering(1), Leaving(1), Raise(), Lower(), ClosingRequest(), OpeningRequest(), KeepDown()];
 
 for (var i = 0; i < n; i++){

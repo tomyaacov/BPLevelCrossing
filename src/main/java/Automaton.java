@@ -45,31 +45,9 @@ public class Automaton {
     }
 
     public void removeHelperEvents(){
-        Map<BProgramSyncSnapshot, Map<BEvent, Set<BProgramSyncSnapshot>>> transMap = new HashMap<>();
-        for (Map.Entry<BProgramSyncSnapshot, Map<BEvent, Set<BProgramSyncSnapshot>>> ent : transitions.entrySet()){
-            transMap.put(ent.getKey(), new HashMap<>());
-            for (Map.Entry<BEvent, Set<BProgramSyncSnapshot>> tr : ent.getValue().entrySet()){
-                transMap.get(ent.getKey()).put(tr.getKey(), tr.getValue());
-            }
-        }
-        for (Map.Entry<BProgramSyncSnapshot, Map<BEvent, Set<BProgramSyncSnapshot>>> ent : transitions.entrySet()){
-            for (Map.Entry<BEvent, Set<BProgramSyncSnapshot>> tr : ent.getValue().entrySet()){
-                if(helperEvents.contains(tr.getKey())){
-                    BProgramSyncSnapshot s = (BProgramSyncSnapshot)tr.getValue().toArray()[0];
-                    transMap.get(ent.getKey()).remove(tr.getKey());
-                    transMap.get(ent.getKey()).putAll(transMap.get(s));
-                }
-            }
-        }
-        transitions = transMap;
-        for (Map.Entry<BProgramSyncSnapshot, Map<BEvent, Set<BProgramSyncSnapshot>>> ent : transitions.entrySet()){
-            for (Map.Entry<BEvent, Set<BProgramSyncSnapshot>> tr : ent.getValue().entrySet()){
-                if(helperEvents.contains(tr.getKey())){
-                    BProgramSyncSnapshot s = (BProgramSyncSnapshot)tr.getValue().toArray()[0];
-                    transMap.get(ent.getKey()).remove(tr.getKey());
-                    transMap.get(ent.getKey()).putAll(transMap.get(s));
-                }
-            }
+        boolean done = false;
+        while(!done){
+            done = removeSingleHelperEvent();
         }
         Set<BProgramSyncSnapshot> reachableStates = getReachableStates();
         accepting.put(0, reachableStates);
@@ -77,6 +55,20 @@ public class Automaton {
                                 .stream()
                                 .filter(map -> reachableStates.contains(map.getKey()))
                                 .collect(Collectors.toMap(map -> map.getKey(), map -> map.getValue()));
+    }
+
+    public boolean removeSingleHelperEvent(){
+        for (Map.Entry<BProgramSyncSnapshot, Map<BEvent, Set<BProgramSyncSnapshot>>> ent : transitions.entrySet()){
+            for (Map.Entry<BEvent, Set<BProgramSyncSnapshot>> tr : ent.getValue().entrySet()){
+                if(helperEvents.contains(tr.getKey())){
+                    BProgramSyncSnapshot s = (BProgramSyncSnapshot)tr.getValue().toArray()[0];
+                    transitions.get(ent.getKey()).remove(tr.getKey());
+                    transitions.get(ent.getKey()).putAll(transitions.get(s));
+                    return false;
+                }
+            }
+        }
+        return true;
     }
 
     public Set<BProgramSyncSnapshot> getReachableStates(){

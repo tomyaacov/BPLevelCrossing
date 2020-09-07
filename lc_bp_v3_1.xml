@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<Structure label-on="Transition" type="FiniteStateAutomaton">
+    <Name/>
+    <Description/>
+    <Formula/>
+    <Alphabet type="Classical">
+        <Symbol>Approaching0</Symbol>
+        <Symbol>Entering0</Symbol>
+        <Symbol>Leaving0</Symbol>
+        <Symbol>Lower</Symbol>
+        <Symbol>Raise</Symbol>
+    </Alphabet>
+    <StateSet>
+        <State sid="1">
+            <X>137</X>
+            <Y>215</Y>
+            <Label>1942376164</Label>
+            <Properties/>
+        </State>
+        <State sid="2">
+            <X>234</X>
+            <Y>96</Y>
+            <Label>1957559080</Label>
+            <Properties/>
+        </State>
+        <State sid="3">
+            <X>376</X>
+            <Y>158</Y>
+            <Label>-1280165840</Label>
+            <Properties/>
+        </State>
+        <State sid="4">
+            <X>333</X>
+            <Y>298</Y>
+            <Label>818209870</Label>
+            <Properties/>
+        </State>
+        <State sid="5">
+            <X>252</X>
+            <Y>196</Y>
+            <Label>2088199156</Label>
+            <Properties/>
+        </State>
+        <State sid="6">
+            <X>145</X>
+            <Y>478</Y>
+            <Label>-651400200</Label>
+            <Properties/>
+        </State>
+        <State sid="7">
+            <X>196</X>
+            <Y>353</Y>
+            <Label>946040286</Label>
+            <Properties/>
+        </State>
+        <State sid="8">
+            <X>96</X>
+            <Y>599</Y>
+            <Label>1545195604</Label>
+            <Properties/>
+        </State>
+    </StateSet>
+    <InitialStateSet>
+        <StateID>8</StateID>
+    </InitialStateSet>
+    <TransitionSet complete="false">
+        <Transition tid="1">
+            <From>1</From>
+            <To>2</To>
+            <Label>Leaving0</Label>
+            <Properties/>
+        </Transition>
+        <Transition tid="6">
+            <From>2</From>
+            <To>3</To>
+            <Label>Raise</Label>
+            <Properties/>
+        </Transition>
+        <Transition tid="7">
+            <From>2</From>
+            <To>5</To>
+            <Label>Approaching0</Label>
+            <Properties/>
+        </Transition>
+        <Transition tid="2">
+            <From>3</From>
+            <To>4</To>
+            <Label>Approaching0</Label>
+            <Properties/>
+        </Transition>
+        <Transition tid="8">
+            <From>4</From>
+            <To>7</To>
+            <Label>Lower</Label>
+            <Properties/>
+        </Transition>
+        <Transition tid="4">
+            <From>5</From>
+            <To>1</To>
+            <Label>Entering0</Label>
+            <Properties/>
+        </Transition>
+        <Transition tid="3">
+            <From>5</From>
+            <To>4</To>
+            <Label>Raise</Label>
+            <Properties/>
+        </Transition>
+        <Transition tid="5">
+            <From>6</From>
+            <To>7</To>
+            <Label>Lower</Label>
+            <Properties/>
+        </Transition>
+        <Transition tid="10">
+            <From>7</From>
+            <To>1</To>
+            <Label>Entering0</Label>
+            <Properties/>
+        </Transition>
+        <Transition tid="9">
+            <From>8</From>
+            <To>6</To>
+            <Label>Approaching0</Label>
+            <Properties/>
+        </Transition>
+    </TransitionSet>
+    <Acc type="Buchi">
+        <StateID>1</StateID>
+        <StateID>2</StateID>
+        <StateID>3</StateID>
+        <StateID>4</StateID>
+        <StateID>5</StateID>
+        <StateID>6</StateID>
+        <StateID>7</StateID>
+        <StateID>8</StateID>
+    </Acc>
+    <Properties/>
+</Structure>

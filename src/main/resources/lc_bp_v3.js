@@ -1,5 +1,5 @@
 importPackage(Packages.events);
-const n = 1;
+const n = 2;
 const x = [Approaching(0), Entering(0), Leaving(0), Approaching(1), Entering(1), Leaving(1), Raise(), Lower()];
 
 for (var i = 0; i < n; i++){
@@ -26,9 +26,9 @@ for (var i = 0; i < n; i++){
             }
         });
 
-
-
-        bp.registerBThread("x"+i, function() {
+        bp.registerBThread("Lower the barrier when train" + i + " is approaching and then raise it as soon as possible", function() {
+            bp.sync({waitFor: Approaching(i)});
+            bp.sync({request: Lower()});
             while(true){
                 let e=""
                 bp.sync({waitFor: Leaving(i)});
@@ -43,15 +43,6 @@ for (var i = 0; i < n; i++){
                 }
             }
         });
-
-        bp.registerBThread("Lower the barrier when a train is approaching and then raise it as soon as possible", function() {
-                   bp.sync({waitFor: Approaching(i)});
-                   bp.sync({request: Lower()});//
-                });
-
-
-
-
 
     })(i);
 }
