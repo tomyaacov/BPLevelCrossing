@@ -3,8 +3,8 @@ const n = 1;
 const x = [Approaching(0), Entering(0), Leaving(0), Approaching(1), Entering(1), Leaving(1), Raise(), Lower()];
 const y = [Context(true, [true, true]), Context(true, [false, true]), Context(true, [true, false]), Context(true, [false, false])];
 const z = [Context(false, [true, true]), Context(false, [false, true]), Context(false, [true, false]), Context(false, [false, false])];
-let notContext = bp.EventSet("notContext", e => ! (e instanceof Context))
-let contextEventSet = bp.EventSet("contextEventSet", e =>  (e instanceof Context))
+const notContext = bp.EventSet("notContext", e => ! (e instanceof Context))
+const contextEventSet = bp.EventSet("contextEventSet", e =>  (e instanceof Context))
 
 for (var i = 0; i < n; i++){
     (function(i){
@@ -16,29 +16,17 @@ for (var i = 0; i < n; i++){
             }
         });
 
-        bp.registerBThread("The barrier cannot be raised when there is a train in railway " + i, function() {
-            while (true){
-                bp.sync({waitFor: Entering(i)});
-                bp.sync({waitFor: Leaving(i), block: Raise()});//
-            }
-        });
-
         bp.registerBThread("Trains cannot enter railway " + i + " when the barier is down", function() {
             while (true){
                 bp.sync({waitFor: Lower(), block: Entering(i)});//
                 bp.sync({waitFor: Raise()});
             }
         });
+
         bp.registerBThread(i+"Lower the barrier when train is approaching and then raise it as soon as possible", function() {
-            let e = undefined
             while(true) {
                 bp.sync({waitFor: Approaching(i)});
-                e = bp.sync({waitFor: contextEventSet});
-                if (e.raised){
-                    e = undefined
-                    bp.sync({request: Lower(), waitFor:bp.all});
-                }
-                e = undefined
+                bp.sync({request: Lower(), waitFor:Entering(i)});
             }
         });
         
@@ -46,38 +34,42 @@ for (var i = 0; i < n; i++){
     })(i);
 }
 
-bp.registerBThread("Raise", function() {
+bp.registerBThread("The barrier can be raised when there is no train in railway and the barrier is down", function() {
     let e = undefined
     while(true) {
         e = bp.sync({waitFor: contextEventSet});
         if (!(e.raised) && !(e.trainInside.some(a => a))){
             e = undefined
-            bp.sync({request: Raise(), waitFor:bp.all});
+            bp.sync({request: Raise(), waitFor: notContext});
         }
         e = undefined
     }
 });
 
+bp.registerBThread("interleave lower raise", function() {
+    while (true){
+        bp.sync({waitFor: Lower(), block: Raise()});//
+        bp.sync({waitFor: Raise(), block: Lower()});
+    }  
+});
+
 bp.registerBThread("Interleave", function() {
-    let raised = true
-    let trainInside = [false, false]
-    let e = undefined
+    let ctx = Context(true, [false, false])
     while(true) {
+        bp.sync({request: ctx, block: notContext})
         e = bp.sync({waitFor: notContext});
         if (e instanceof Lower){
-            raised = false
+            ctx.raised = false
         }
         if (e instanceof Raise){
-            raised = true
+            ctx.raised = true
         }
         if (e instanceof Entering){//Approaching
-            trainInside[e.i] = true
+            ctx.trainInside[e.i] = true
         }
         if (e instanceof Leaving){
-            trainInside[e.i] = false
+            ctx.trainInside[e.i] = false
         }
-        e = undefined
-        bp.sync({request: Context(raised, trainInside), block: notContext})
     }
 });
 
