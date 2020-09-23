@@ -26,7 +26,7 @@ for (var i = 0; i < n; i++){
             }
         });
 
-        bp.registerBThread("Lower the barrier when train" + i + " is approaching and then raise it as soon as possible", function() {
+        bp.registerBThread("Lower the barrier when train " + i + " is approaching and then raise it as soon as possible", function() {
             bp.sync({waitFor: Approaching(i)});
             bp.sync({request: Lower()});
             while(true){

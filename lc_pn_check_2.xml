@@ -15,188 +15,116 @@
     </Alphabet>
     <StateSet>
         <State sid="1">
-            <X>318</X>
-            <Y>402</Y>
+            <X>254</X>
+            <Y>336</Y>
             <Label>1878027058</Label>
             <Properties/>
         </State>
         <State sid="2">
-            <X>467</X>
-            <Y>303</Y>
+            <X>425</X>
+            <Y>335</Y>
             <Label>374258038</Label>
             <Properties/>
         </State>
-        <State sid="3">
-            <X>285</X>
-            <Y>491</Y>
-            <Label>-1647326724</Label>
-            <Properties/>
-        </State>
         <State sid="4">
-            <X>389</X>
-            <Y>470</Y>
+            <X>488</X>
+            <Y>518</Y>
             <Label>1878027058</Label>
             <Properties/>
         </State>
-        <State sid="5">
-            <X>520</X>
-            <Y>623</Y>
-            <Label>-1647326724</Label>
-            <Properties/>
-        </State>
         <State sid="6">
-            <X>437</X>
-            <Y>204</Y>
+            <X>328</X>
+            <Y>202</Y>
             <Label>678647802</Label>
             <Properties/>
         </State>
         <State sid="7">
-            <X>633</X>
-            <Y>98</Y>
+            <X>424</X>
+            <Y>96</Y>
             <Label>-105408644</Label>
             <Properties/>
         </State>
         <State sid="8">
-            <X>551</X>
-            <Y>375</Y>
+            <X>470</X>
+            <Y>295</Y>
             <Label>-1053057276</Label>
             <Properties/>
         </State>
-        <State sid="9">
-            <X>344</X>
-            <Y>319</Y>
-            <Label>1999073726</Label>
-            <Properties/>
-        </State>
         <State sid="10">
-            <X>632</X>
-            <Y>287</Y>
+            <X>593</X>
+            <Y>386</Y>
             <Label>678647802</Label>
             <Properties/>
         </State>
         <State sid="11">
-            <X>736</X>
-            <Y>154</Y>
+            <X>659</X>
+            <Y>269</Y>
             <Label>-105408644</Label>
             <Properties/>
         </State>
-        <State sid="12">
-            <X>606</X>
-            <Y>453</Y>
-            <Label>1999073726</Label>
-            <Properties/>
-        </State>
         <State sid="13">
-            <X>830</X>
-            <Y>220</Y>
+            <X>583</X>
+            <Y>143</Y>
             <Label>1423700432</Label>
             <Properties/>
         </State>
-        <State sid="14">
-            <X>809</X>
-            <Y>443</Y>
-            <Label>-637738796</Label>
-            <Properties/>
-        </State>
-        <State sid="15">
-            <X>729</X>
-            <Y>337</Y>
-            <Label>-1701624122</Label>
-            <Properties/>
-        </State>
         <State sid="16">
-            <X>483</X>
-            <Y>192</Y>
+            <X>357</X>
+            <Y>264</Y>
             <Label>-1701624122</Label>
             <Properties/>
         </State>
         <State sid="17">
-            <X>624</X>
-            <Y>551</Y>
+            <X>320</X>
+            <Y>418</Y>
             <Label>1125283996</Label>
             <Properties/>
         </State>
         <State sid="18">
-            <X>438</X>
-            <Y>505</Y>
+            <X>526</X>
+            <Y>403</Y>
             <Label>-1822670790</Label>
             <Properties/>
         </State>
         <State sid="19">
-            <X>414</X>
-            <Y>604</Y>
+            <X>319</X>
+            <Y>526</Y>
             <Label>531014548</Label>
             <Properties/>
         </State>
         <State sid="20">
-            <X>635</X>
-            <Y>505</Y>
+            <X>435</X>
+            <Y>455</Y>
             <Label>1125283996</Label>
             <Properties/>
         </State>
-        <State sid="21">
-            <X>497</X>
-            <Y>521</Y>
-            <Label>-1822670790</Label>
-            <Properties/>
-        </State>
-        <State sid="22">
-            <X>472</X>
-            <Y>742</Y>
-            <Label>-1232008244</Label>
-            <Properties/>
-        </State>
-        <State sid="23">
-            <X>256</X>
-            <Y>617</Y>
-            <Label>-1232008244</Label>
-            <Properties/>
-        </State>
         <State sid="24">
-            <X>537</X>
-            <Y>96</Y>
+            <X>532</X>
+            <Y>176</Y>
             <Label>-753975490</Label>
             <Properties/>
         </State>
         <State sid="25">
-            <X>424</X>
-            <Y>911</Y>
+            <X>597</X>
+            <Y>594</Y>
             <Label>-1617978242</Label>
             <Properties/>
         </State>
         <State sid="26">
-            <X>137</X>
-            <Y>744</Y>
+            <X>140</X>
+            <Y>470</Y>
             <Label>-1617978242</Label>
             <Properties/>
         </State>
-        <State sid="27">
-            <X>641</X>
-            <Y>815</Y>
-            <Label>829430984</Label>
-            <Properties/>
-        </State>
-        <State sid="28">
-            <X>96</X>
-            <Y>488</Y>
-            <Label>829430984</Label>
-            <Properties/>
-        </State>
-        <State sid="29">
-            <X>983</X>
-            <Y>490</Y>
-            <Label>-1023708794</Label>
-            <Properties/>
-        </State>
         <State sid="30">
-            <X>731</X>
-            <Y>657</Y>
+            <X>515</X>
+            <Y>680</Y>
             <Label>-699678092</Label>
             <Properties/>
         </State>
         <State sid="31">
-            <X>154</X>
-            <Y>308</Y>
+            <X>96</X>
+            <Y>333</Y>
             <Label>-699678092</Label>
             <Properties/>
         </State>
@@ -211,9 +139,9 @@
             <Label>Leaving0</Label>
             <Properties/>
         </Transition>
-        <Transition tid="2">
+        <Transition tid="64">
             <From>1</From>
-            <To>3</To>
+            <To>17</To>
             <Label>Approaching1</Label>
             <Properties/>
         </Transition>
@@ -235,40 +163,22 @@
             <Label>Raise</Label>
             <Properties/>
         </Transition>
-        <Transition tid="46">
-            <From>3</From>
-            <To>18</To>
-            <Label>Leaving0</Label>
-            <Properties/>
-        </Transition>
-        <Transition tid="47">
-            <From>3</From>
-            <To>19</To>
-            <Label>Entering1</Label>
-            <Properties/>
-        </Transition>
         <Transition tid="3">
             <From>4</From>
             <To>2</To>
             <Label>Leaving1</Label>
             <Properties/>
         </Transition>
-        <Transition tid="4">
+        <Transition tid="71">
             <From>4</From>
-            <To>5</To>
+            <To>20</To>
             <Label>Approaching0</Label>
             <Properties/>
         </Transition>
-        <Transition tid="45">
-            <From>5</From>
-            <To>19</To>
+        <Transition tid="60">
+            <From>6</From>
+            <To>1</To>
             <Label>Entering0</Label>
-            <Properties/>
-        </Transition>
-        <Transition tid="44">
-            <From>5</From>
-            <To>21</To>
-            <Label>Leaving1</Label>
             <Properties/>
         </Transition>
         <Transition tid="5">
@@ -281,12 +191,6 @@
             <From>6</From>
             <To>8</To>
             <Label>Approaching1</Label>
-            <Properties/>
-        </Transition>
-        <Transition tid="7">
-            <From>6</From>
-            <To>9</To>
-            <Label>Entering0</Label>
             <Properties/>
         </Transition>
         <Transition tid="14">
@@ -313,16 +217,10 @@
             <Label>Entering1</Label>
             <Properties/>
         </Transition>
-        <Transition tid="24">
-            <From>9</From>
-            <To>2</To>
-            <Label>Leaving0</Label>
-            <Properties/>
-        </Transition>
-        <Transition tid="25">
-            <From>9</From>
-            <To>3</To>
-            <Label>Approaching1</Label>
+        <Transition tid="67">
+            <From>10</From>
+            <To>4</To>
+            <Label>Entering1</Label>
             <Properties/>
         </Transition>
         <Transition tid="9">
@@ -337,76 +235,34 @@
             <Label>Raise</Label>
             <Properties/>
         </Transition>
-        <Transition tid="10">
-            <From>10</From>
-            <To>12</To>
-            <Label>Entering1</Label>
-            <Properties/>
-        </Transition>
         <Transition tid="12">
             <From>11</From>
             <To>13</To>
             <Label>Approaching0</Label>
             <Properties/>
         </Transition>
-        <Transition tid="13">
+        <Transition tid="78">
             <From>11</From>
-            <To>15</To>
+            <To>18</To>
             <Label>Lower</Label>
             <Properties/>
         </Transition>
-        <Transition tid="26">
-            <From>12</From>
-            <To>2</To>
-            <Label>Leaving1</Label>
-            <Properties/>
-        </Transition>
-        <Transition tid="27">
-            <From>12</From>
-            <To>5</To>
-            <Label>Approaching0</Label>
-            <Properties/>
-        </Transition>
-        <Transition tid="11">
+        <Transition tid="75">
             <From>13</From>
-            <To>14</To>
+            <To>8</To>
             <Label>Lower</Label>
             <Properties/>
         </Transition>
-        <Transition tid="37">
-            <From>14</From>
-            <To>17</To>
+        <Transition tid="61">
+            <From>16</From>
+            <To>1</To>
             <Label>Entering0</Label>
-            <Properties/>
-        </Transition>
-        <Transition tid="36">
-            <From>14</From>
-            <To>20</To>
-            <Label>Entering1</Label>
-            <Properties/>
-        </Transition>
-        <Transition tid="22">
-            <From>15</From>
-            <To>8</To>
-            <Label>Approaching0</Label>
-            <Properties/>
-        </Transition>
-        <Transition tid="23">
-            <From>15</From>
-            <To>12</To>
-            <Label>Entering1</Label>
             <Properties/>
         </Transition>
         <Transition tid="20">
             <From>16</From>
             <To>8</To>
             <Label>Approaching1</Label>
-            <Properties/>
-        </Transition>
-        <Transition tid="21">
-            <From>16</From>
-            <To>9</To>
-            <Label>Entering0</Label>
             <Properties/>
         </Transition>
         <Transition tid="16">
@@ -421,16 +277,16 @@
             <Label>Entering1</Label>
             <Properties/>
         </Transition>
+        <Transition tid="69">
+            <From>18</From>
+            <To>4</To>
+            <Label>Entering1</Label>
+            <Properties/>
+        </Transition>
         <Transition tid="34">
             <From>18</From>
             <To>8</To>
             <Label>Approaching0</Label>
-            <Properties/>
-        </Transition>
-        <Transition tid="35">
-            <From>18</From>
-            <To>12</To>
-            <Label>Entering1</Label>
             <Properties/>
         </Transition>
         <Transition tid="42">
@@ -445,52 +301,16 @@
             <Label>Leaving0</Label>
             <Properties/>
         </Transition>
+        <Transition tid="79">
+            <From>20</From>
+            <To>16</To>
+            <Label>Leaving1</Label>
+            <Properties/>
+        </Transition>
         <Transition tid="19">
             <From>20</From>
             <To>19</To>
             <Label>Entering0</Label>
-            <Properties/>
-        </Transition>
-        <Transition tid="18">
-            <From>20</From>
-            <To>21</To>
-            <Label>Leaving1</Label>
-            <Properties/>
-        </Transition>
-        <Transition tid="32">
-            <From>21</From>
-            <To>8</To>
-            <Label>Approaching1</Label>
-            <Properties/>
-        </Transition>
-        <Transition tid="33">
-            <From>21</From>
-            <To>9</To>
-            <Label>Entering0</Label>
-            <Properties/>
-        </Transition>
-        <Transition tid="29">
-            <From>22</From>
-            <To>19</To>
-            <Label>Entering0</Label>
-            <Properties/>
-        </Transition>
-        <Transition tid="28">
-            <From>22</From>
-            <To>21</To>
-            <Label>Leaving1</Label>
-            <Properties/>
-        </Transition>
-        <Transition tid="30">
-            <From>23</From>
-            <To>18</To>
-            <Label>Leaving0</Label>
-            <Properties/>
-        </Transition>
-        <Transition tid="31">
-            <From>23</From>
-            <To>19</To>
-            <Label>Entering1</Label>
             <Properties/>
         </Transition>
         <Transition tid="39">
@@ -505,57 +325,39 @@
             <Label>Approaching1</Label>
             <Properties/>
         </Transition>
-        <Transition tid="40">
+        <Transition tid="72">
             <From>25</From>
-            <To>22</To>
+            <To>20</To>
             <Label>Lower</Label>
             <Properties/>
         </Transition>
-        <Transition tid="41">
+        <Transition tid="65">
             <From>26</From>
-            <To>23</To>
+            <To>17</To>
             <Label>Lower</Label>
             <Properties/>
         </Transition>
-        <Transition tid="51">
-            <From>27</From>
-            <To>22</To>
-            <Label>Lower</Label>
-            <Properties/>
-        </Transition>
-        <Transition tid="52">
-            <From>28</From>
-            <To>23</To>
-            <Label>Lower</Label>
-            <Properties/>
-        </Transition>
-        <Transition tid="53">
-            <From>29</From>
-            <To>14</To>
-            <Label>Lower</Label>
-            <Properties/>
-        </Transition>
-        <Transition tid="57">
+        <Transition tid="70">
             <From>30</From>
-            <To>12</To>
+            <To>4</To>
             <Label>Lower</Label>
             <Properties/>
         </Transition>
-        <Transition tid="56">
+        <Transition tid="77">
             <From>30</From>
-            <To>27</To>
+            <To>25</To>
             <Label>Approaching0</Label>
             <Properties/>
         </Transition>
-        <Transition tid="59">
+        <Transition tid="63">
             <From>31</From>
-            <To>9</To>
+            <To>1</To>
             <Label>Lower</Label>
             <Properties/>
         </Transition>
-        <Transition tid="58">
+        <Transition tid="74">
             <From>31</From>
-            <To>28</To>
+            <To>26</To>
             <Label>Approaching1</Label>
             <Properties/>
         </Transition>
@@ -563,33 +365,21 @@
     <Acc type="Buchi">
         <StateID>1</StateID>
         <StateID>2</StateID>
-        <StateID>3</StateID>
         <StateID>4</StateID>
-        <StateID>5</StateID>
         <StateID>6</StateID>
         <StateID>7</StateID>
         <StateID>8</StateID>
-        <StateID>9</StateID>
         <StateID>10</StateID>
         <StateID>11</StateID>
-        <StateID>12</StateID>
         <StateID>13</StateID>
-        <StateID>14</StateID>
-        <StateID>15</StateID>
         <StateID>16</StateID>
         <StateID>17</StateID>
         <StateID>18</StateID>
         <StateID>19</StateID>
         <StateID>20</StateID>
-        <StateID>21</StateID>
-        <StateID>22</StateID>
-        <StateID>23</StateID>
         <StateID>24</StateID>
         <StateID>25</StateID>
         <StateID>26</StateID>
-        <StateID>27</StateID>
-        <StateID>28</StateID>
-        <StateID>29</StateID>
         <StateID>30</StateID>
         <StateID>31</StateID>
     </Acc>
